@@ -1,0 +1,491 @@
+import React, { useState } from "react";
+import Layout from "../components/Layout/Layout";
+import hero from "../assets/hero.png";
+import doctor from "../assets/doctor.jpg";
+import location from "../assets/location.png";
+import appointment from "../assets/book-appointment.png";
+import { FaArrowRightLong } from "react-icons/fa6";
+import { Link } from "react-router-dom";
+import HighlyRatedDoctor from "../components/HighlyRatedDoctor";
+import { FaCircle } from "react-icons/fa";
+import { GoDash } from "react-icons/go";
+import Cards from "../components/Cards";
+import { IoStarSharp } from "react-icons/io5";
+
+const HomePage = () => {
+  const [activeIndex, setActiveIndex] = useState(null);
+
+  const questions = [
+    "What is your medical care?",
+    "What happens if I need to go to the hospital?",
+    "Can I visit your medical office?",
+    "What is this website for?",
+    "Do you provide urgent care?",
+  ];
+
+  const answers = [
+    "Answer 1: Your medical care is...",
+    "Answer 2: If you need to go to the hospital...",
+    "Answer 3: Yes, you can visit our medical office...",
+    "Answer 4: This website is for...",
+    "Answer 5: Yes, we provide urgent care...",
+  ];
+
+  const handleQuestionClick = (index) => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
+
+  const patientPhoto = localStorage.getItem("patientPhoto");
+
+  return (
+    <Layout>
+      {/* hero section */}
+      <div
+        className="min-h-[80vh] flex items-center justify-start bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${hero})`,
+          backgroundSize: "cover",
+          backgroundPosition: "70%", // Adjusted background position for smaller screens
+        }}
+      >
+        <div className="min-h-[80vh] flex items-center justify-start mx-10 md:mx-20">
+          <div className="bg-white p-6 rounded-md shadow-lg md:w-1/2 bg-opacity-30 lg:w-1/3 text-black">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+              We Help Patients Live A Longer Life
+            </h1>
+            <p className="text-base md:text-md lg:text-lg mb-6">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat
+              rerum facilis nemo a impedit cumque fugiat, animi illo autem.
+              Eaque inventore nihil amet laudantium ab!
+            </p>
+            <Link to="/find-doctor">
+              <button className="bg-blue-500 hover:bg-blue-600 font-bold text-white px-6 py-3 rounded-3xl mb-10 mr-4">
+                Request An Appointment
+              </button>
+            </Link>
+            <div className="flex gap-5">
+              <div className="flex flex-col">
+                <span className="font-bold text-3xl border-b-4 border-orange-400 w-1/3">
+                  30+
+                </span>
+                <span>Years of Experience</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-bold text-3xl border-b-4 border-purple-500 w-1/3">
+                  15+
+                </span>
+                Clinic Location
+              </div>
+              <div className="flex flex-col">
+                <span className="font-bold text-3xl border-b-4 border-blue-400 w-1/3">
+                  100%
+                </span>
+                <span>Patient Satisfaction</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="min-h-[80vh] flex flex-col items-center text-center mb-4">
+        <h2 className="text-2xl md:text-3xl lg:text-3xl mx-3 mt-10 md:w-1/2 mb-4 font-bold">
+          Providing the best medical services
+        </h2>
+        <p className="font-normal text-btnColor w-2/3 md:w-1/2 mb-10 text-xl">
+          World Class Care For Everyone. Our Health System Offers Unmatched,
+          Expert Health Care.
+        </p>
+        <div className="flex flex-col md:flex-row md:space-x-4 lg:space-x-8 mx-4 md:mx-10">
+          <div className="container mb-8 md:mb-0 flex flex-col items-center">
+            <img
+              src={doctor}
+              alt="find a doctor img"
+              className=" w-32 h-32 md:w-48 md:h-auto  rounded-md mb-4"
+            />
+            <h3 className="text-2xl font-bold mb-2">Find a Doctor</h3>
+            <p className="text-gray-600 text-center">
+              World Class Care For Everyone. Our Health System Offers Unmatched,
+              Expert Health Care.
+            </p>
+            <span className="inline-block cursor-pointer mt-4 p-2 border border-black rounded-full hover:bg-btnColor transition-all duration-300 ease-in-out">
+              <Link to="/find-doctor">
+                <FaArrowRightLong className="w-4 h-4 text-black" />
+              </Link>
+            </span>
+          </div>
+          <div className="container mb-8 md:mb-0 flex flex-col items-center">
+            <img
+              src={location}
+              alt="find a location img"
+              className=" w-32 h-32 md:w-48 md:h-auto  rounded-md mb-4"
+            />
+            <h3 className="text-2xl font-bold mb-2">Find a Location</h3>
+            <p className="text-gray-600 text-center">
+              World Class Care For Everyone. Our Health System Offers Unmatched,
+              Expert Health Care.
+            </p>
+            <span className="inline-block cursor-pointer mt-4 p-2 border border-black rounded-full hover:bg-btnColor transition-all duration-300 ease-in-out">
+              <FaArrowRightLong className="w-4 h-4 text-black" />
+            </span>
+          </div>
+          <div className="container mt-4 flex flex-col items-center">
+            <img
+              src={appointment}
+              alt="book an appointment img"
+              className=" w-32 h-32 md:w-48 md:h-auto  rounded-md mb-4"
+            />
+            <h3 className="text-2xl font-bold mb-2">Book Appointments</h3>
+            <p className="text-gray-600 text-center">
+              World Class Care For Everyone. Our Health System Offers Unmatched,
+              Expert Health Care.
+            </p>
+            <Link to="/book-appointment">
+              <span className="inline-block cursor-pointer mt-4 p-2 border border-black rounded-full hover:bg-btnColor transition-all duration-300 ease-in-out">
+                <FaArrowRightLong className="w-4 h-4 text-black" />
+              </span>
+            </Link>
+          </div>
+        </div>
+      </div>
+      {/* best doctor section */}
+
+      <div className="min-h-[80vh] bg-white flex items-center flex-col lg:flex-row mt-12 lg:mt-4 gap-x-60 px-10 md:px-20">
+        <div className="relative w-3/4 lg:w-1/2">
+          <figure className="relative">
+            <img src={doctor} alt="doctor img" className="mb-10" />
+            <div className="hidden lg:block shadow-2xl  rounded-lg w-72 absolute right-[5%] top-[49%] transform translate-x-1/2 translate-y-1/2 text-white p-4">
+              <div className="flex gap-x-2">
+                <FaCircle className="text-red-500" />
+                <FaCircle className="text-yellow-500" />
+                <FaCircle className="text-green-500" />
+              </div>
+              <div className="mt-4">
+                <div className="flex my-[-14px] text-gray-300 justify-center">
+                  <GoDash className="w-12 h-12 stroke-2" />
+                  <GoDash className="w-20 h-12 stroke-2" />
+                </div>
+                <div className="flex gap-x-2">
+                  <img src={doctor} className="w-12 h-12 rounded-full" alt="" />
+                  <div>
+                    <p className="text-black text-lg font-semibold">
+                      Dr. Mitchell Stac
+                    </p>
+                    <p className="text-gray-400">Chief Doctor of Nursing</p>{" "}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </figure>
+        </div>
+        <div className="w-3/4 ">
+          <h2 className="text-center text-3xl mb-8 font-bold">
+            Proud to be one of the nation's best.
+          </h2>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur
+            alias molestias obcaecati praesentium asperiores quos officia
+            commodi suscipit cum animi! Lorem ipsum dolor sit amet consectetur
+            adipisicing elit. Modi pariatur hic incidunt. A obcaecati, ratione
+            itaque earum quae delectus in?
+          </p>
+          <br />
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo ut,
+            iste nihil voluptate, ab odio unde exercitationem, dignissimos
+            consectetur tempore magni ullam accusantium repudiandae. Dolorum
+            cupiditate eligendi labore est nobis. Lorem ipsum dolor sit amet
+            consectetur adipisicing elit. Cum ad voluptatibus illum eaque ex ab.
+            Voluptas deserunt qui architecto id ea cumque fugit deleniti
+            doloremque?
+          </p>
+          <Link to="/doctor-details">
+            <button className="bg-blue-700 text-white rounded-3xl mt-10 px-6 py-3 mb-10">
+              Learn More
+            </button>
+          </Link>
+        </div>
+      </div>
+      {/* Medical Services */}
+      <div className="min-h-[80vh]  mb-4 pt-6">
+        <h2 className="text-2xl text-center md:text-3xl lg:text-3xl mx-3 mt-10 mb-4 font-bold">
+          Our Medical Services
+        </h2>
+        <p className="font-normal text-center text-btnColor mb-10 text-normal mx-4 lg:text-xl">
+          World Class Care For Everyone. Our Health System Offers Unmatched,
+          Expert Health Care.
+        </p>
+        <div className="flex flex-wrap mx-14 mb-10">
+          <div className="w-full md:w-1/2 lg:w-1/3 p-6  shadow-2xl  rounded-lg">
+            <h2 className="font-bold text-xl mb-4">Cancer Care</h2>
+            <p className="text-gray w-11/12 mb-6">
+              {" "}
+              World Class Care For Everyone. Our Health System Offers Unmatched,
+              from the lab to the clinic.
+            </p>
+            <div className="flex justify-between items-center">
+              <span className=" cursor-pointer mt-4 p-2 border border-black rounded-full hover:bg-btnColor transition-all duration-300 ease-in-out">
+                <Link to="/about">
+                  <FaArrowRightLong className="w-4 h-4 text-black" />
+                </Link>
+              </span>
+              <div className=" flex items-center justify-center w-10 h-10 bg-red-300">
+                <span className="text-red-600">1</span>
+              </div>
+            </div>
+          </div>
+          <div className="w-full md:w-1/2 lg:w-1/3 p-6  shadow-2xl  rounded-lg">
+            <h2 className="font-bold text-xl mb-4">Labor & Delivery</h2>
+            <p className="text-gray w-11/12 mb-6">
+              {" "}
+              World Class Care For Everyone. Our Health System Offers Unmatched,
+              from the lab to the clinic.
+            </p>
+            <div className="flex justify-between items-center">
+              <span className="inline-block cursor-pointer mt-4 p-2 border border-black rounded-full hover:bg-btnColor transition-all duration-300 ease-in-out">
+                <Link to="/about">
+                  <FaArrowRightLong className="w-4 h-4 text-black" />
+                </Link>
+              </span>
+              <div className=" flex items-center justify-center w-10 h-10 bg-purple-300">
+                <span className="text-purple-600">2</span>
+              </div>
+            </div>
+          </div>
+          <div className="w-full md:w-1/2 lg:w-1/3 p-6  shadow-2xl  rounded-lg">
+            <h2 className="font-bold text-xl mb-4">Heart & Vascular</h2>
+            <p className="text-gray w-11/12 mb-6">
+              {" "}
+              World Class Care For Everyone. Our Health System Offers Unmatched,
+              from the lab to the clinic.
+            </p>
+            <div className="flex justify-between items-center">
+              <span className="inline-block cursor-pointer mt-4 p-2 border border-black rounded-full hover:bg-btnColor transition-all duration-300 ease-in-out">
+                <Link to="/about">
+                  <FaArrowRightLong className="w-4 h-4 text-black" />
+                </Link>
+              </span>
+              <div className=" flex items-center justify-center w-10 h-10 bg-green-300">
+                <span className="text-green-600">3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-wrap mx-14">
+          <div className="w-full md:w-1/2 lg:w-1/3 p-6  shadow-2xl  rounded-lg">
+            <h2 className="font-bold text-xl mb-4">Mental Health</h2>
+            <p className="text-gray w-11/12 mb-6">
+              {" "}
+              World Class Care For Everyone. Our Health System Offers Unmatched,
+              from the lab to the clinic.
+            </p>
+            <div className="flex justify-between items-center">
+              <span className="inline-block cursor-pointer mt-4 p-2 border border-black rounded-full hover:bg-btnColor transition-all duration-300 ease-in-out">
+                <Link to="/about">
+                  <FaArrowRightLong className="w-4 h-4 text-black" />
+                </Link>
+              </span>
+              <div className=" flex items-center justify-center w-10 h-10 bg-blue-300">
+                <span className="text-blue-600">4</span>
+              </div>
+            </div>
+          </div>
+          <div className="w-full md:w-1/2 lg:w-1/3 p-6  shadow-2xl  rounded-lg">
+            <h2 className="font-bold text-xl mb-4">Neurology</h2>
+            <p className="text-gray w-11/12 mb-6">
+              {" "}
+              World Class Care For Everyone. Our Health System Offers Unmatched,
+              from the lab to the clinic.
+            </p>
+            <div className="flex justify-between items-center">
+              <span className="inline-block cursor-pointer mt-4 p-2 border border-black rounded-full hover:bg-btnColor transition-all duration-300 ease-in-out">
+                <Link to="/about">
+                  <FaArrowRightLong className="w-4 h-4 text-black" />
+                </Link>
+              </span>
+              <div className=" flex items-center justify-center w-10 h-10 bg-yellow-200">
+                <span className="text-yellow-600">5</span>
+              </div>
+            </div>
+          </div>
+          <div className="w-full md:w-1/2 lg:w-1/3 p-6  shadow-2xl  rounded-lg">
+            <h2 className="font-bold text-xl mb-4">Burn Treatment</h2>
+            <p className="text-gray w-11/12 mb-6">
+              {" "}
+              World Class Care For Everyone. Our Health System Offers Unmatched,
+              from the lab to the clinic.
+            </p>
+            <div className="flex justify-between items-center">
+              <span className="inline-block cursor-pointer mt-4 p-2 border border-black rounded-full hover:bg-btnColor transition-all duration-300 ease-in-out">
+                <Link to="/about">
+                  <FaArrowRightLong className="w-4 h-4 text-black" />
+                </Link>
+              </span>
+              <div className=" flex items-center justify-center w-10 h-10 bg-purple-300">
+                <span className="text-purple-600">6</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Doctor list */}
+      <div className="min-h-[80vh]  mb-4 pt-6">
+        <h2 className="text-2xl text-center md:text-3xl lg:text-3xl mx-3 mt-10 mb-4 font-bold">
+          Our Highly Rated Doctors
+        </h2>
+        <div className="max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* First Card */}
+          <Cards
+            imgSrc={doctor}
+            name="Doctor Soniya Rajput"
+            specialty="Surgery Expert"
+            rating={4.5}
+            ratingList={2}
+            location="At Fishtail Hospital"
+            link="/doctor-details"
+          />
+
+          {/* Second Card */}
+          <Cards
+            imgSrc={doctor}
+            name="Another Doctor"
+            specialty="Another Specialty"
+            rating={3.8}
+            ratingList={2}
+            location="At Some Hospital"
+            link="/doctor-details"
+          />
+          <Cards
+            imgSrc={doctor}
+            name="Another Doctor"
+            specialty="Another Specialty"
+            rating={3.8}
+            ratingList={2}
+            location="At Some Hospital"
+            link="/doctor-details"
+          />
+        </div>
+      </div>
+      {/* FAQ */}
+      <div className="min-h-[80vh]  mb-4 pt-6 bg-white">
+        <div className="flex mt-8 justify-center gap-x-30">
+          <div className="hidden md:block">
+            <img src={doctor} className="w-96 h-96" alt="" />
+          </div>
+          <div className="w-full md:w-2/4 p-8">
+            <h1 className="text-3xl font-bold mb-8">
+              Most Questions Asked by Our Beloved Patients
+            </h1>
+            {questions.map((question, index) => (
+              <div key={index} className=" mb-4">
+                <div
+                  className={`flex justify-between w-full border px-4 rounded-lg cursor-pointer ${
+                    activeIndex === index ? "border-b-0" : "border-gray-200"
+                  }`}
+                  onClick={() => handleQuestionClick(index)}
+                >
+                  <p className="font-semibold py-4 ">{question}</p>
+                  <div className="w-6 h-6 mr-2 border border-black mt-4 rounded-md flex items-center justify-center">
+                    {activeIndex === index ? (
+                      <span className="text-black">-</span>
+                    ) : (
+                      <span className="text-back">+</span>
+                    )}
+                  </div>
+                </div>
+                {activeIndex === index && (
+                  <p className="mt-[-4px] border border-gray-200 border-t-0 rounded-md py-6 px-5 ">
+                    {answers[index]}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      {/* What our patient say */}
+      <div className="min-h-[60vh]  mb-4 pt-6">
+        <h2 className="text-2xl text-center md:text-3xl lg:text-3xl mx-3 mt-10 mb-4 font-bold">
+          What Our Patients Say{" "}
+        </h2>
+        <p className="font-normal text-center text-btnColor mb-10 text-normal mx-4 lg:text-xl">
+          World Class Care For Everyone. Our Health System Offers Unmatched,
+          Expert Health Care.
+        </p>
+        <div className="flex flex-col gap-y-4 lg:gap-y-0 lg:flex-row gap-x-3 mx-16">
+          <div className="px-10 py-4 shadow-xl w-full lg:w-1/3 rounded-lg">
+            <div className="flex gap-x-4 mb-4">
+              <img src={doctor} className="w-12 h-12 rounded-lg" alt="" />
+              <div>
+                <p className="mb-1">Muhbir Rahman</p>
+                <div className="flex gap-x-1">
+                  <IoStarSharp className="text-yellow-400" />
+                  <IoStarSharp className="text-yellow-400" />
+                  <IoStarSharp className="text-yellow-400" />
+                  <IoStarSharp className="text-yellow-400" />
+                  <IoStarSharp className="text-yellow-400" />
+                </div>
+              </div>
+            </div>
+            <p className="text-gray-600">
+              "I have Taken Medical Services from them. They treat so well and
+              are providing the best medical services"
+            </p>
+          </div>
+          <div className="px-10 py-4 shadow-xl bg-blue-600 w-full lg:w-1/3 rounded-lg">
+            <div className="flex gap-x-4 text-white mb-4">
+              <img src={doctor} className="w-12 h-12 rounded-lg" alt="" />
+              <div>
+                <p className="mb-1">Muhbir Rahman</p>
+                <div className="flex gap-x-1">
+                  <IoStarSharp className="text-yellow-400" />
+                  <IoStarSharp className="text-yellow-400" />
+                  <IoStarSharp className="text-yellow-400" />
+                  <IoStarSharp className="text-yellow-400" />
+                  <IoStarSharp className="text-yellow-400" />
+                </div>
+              </div>
+            </div>
+            <p className="text-white">
+              "I have Taken Medical Services from them. They treat so well and
+              are providing the best medical services"
+            </p>
+          </div>
+          <div className="px-10 py-4 shadow-xl w-full lg:w-1/3 rounded-lg">
+            <div className="flex gap-x-4 mb-4">
+              <img src={doctor} className="w-12 h-12 rounded-lg" alt="" />
+              <div>
+                <p className="mb-1">Muhbir Rahman</p>
+                <div className="flex gap-x-1">
+                  <IoStarSharp className="text-yellow-400" />
+                  <IoStarSharp className="text-yellow-400" />
+                  <IoStarSharp className="text-yellow-400" />
+                  <IoStarSharp className="text-yellow-400" />
+                  <IoStarSharp className="text-yellow-400" />
+                </div>
+              </div>
+            </div>
+            <p className="text-gray-600">
+              "I have Taken Medical Services from them. They treat so well and
+              are providing the best medical services"
+            </p>
+          </div>
+        </div>
+        {/* Conditionally render login button or patient's photo icon */}
+        {patientPhoto ? (
+          <img
+            src={patientPhoto}
+            alt="Patient"
+            className="w-10 h-10 rounded-full"
+          />
+        ) : (
+          <Link to="/login">
+            <button className="bg-btnColor hover:bg-blue-600 font-bold text-white px-6 py-3 rounded-md mb-3">
+              Login
+            </button>
+          </Link>
+        )}
+      </div>
+    </Layout>
+  );
+};
+
+export default HomePage;

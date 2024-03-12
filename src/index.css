@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&family=Roboto:ital,wght@0,400;1,500&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Lato', sans-serif;
+}
+
+.triangle {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 80px 0 0 80px; /* Adjust the values as needed */
+  border-color: transparent transparent transparent #fff;
+  top: 0;
+  left: 0;
+}
+
+/* FORM */
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+input,
+textarea {
+  width: 100%;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  border: 2px solid black;
+  resize: none;
+  color: var(--color-white);
+}
+.gmail-button {
+  background-color: #c2e7ff;
+  color: #000;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+.gmail-button:hover {
+  background-color: #3c78d8;
+}
+.messenger-button {
+  background-color: #1877f2;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+.messenger-button:hover {
+  background-color: #0088cc;
+}
+.whatsapp-button {
+  background-color: #25d366;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+.whatsapp-button:hover {
+  background-color: #0ca745;
+}
+/* ----------------- MEDIA QUERIES (MEDIUM DEVICES)----------- */
+
+@media screen and (max-width: 1024px) {
+  .container.contact__container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .mobile-responsive {
+    margin: 0 auto;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .container.contact__container {
+    width: 90%;
+  }
+}
