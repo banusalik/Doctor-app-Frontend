@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Link, useLocation, NavLink } from 'react-router-dom';
-import logo from '../../assets/Logo.svg';
+import React, { useState } from "react";
+import { Link, useLocation, NavLink } from "react-router-dom";
+import logo from "../../assets/Logo.svg";
+
 const Header = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
 
@@ -43,7 +44,7 @@ const Header = () => {
             <ul
               tabIndex={0}
               className={`menu menu-sm bg-slate-300 dropdown-content mt-2 z-1000 p-4 shadow rounded-box w-52 ${
-                isMenuOpen ? 'block' : 'hidden'
+                isMenuOpen ? "block" : "hidden"
               }`}
             >
               <li onClick={(e) => handleMenuItemClick(e)} className=" mb-4">
@@ -86,7 +87,7 @@ const Header = () => {
             <li>
               <NavLink
                 to="/"
-                className={`font-bold ${isActive('/') && 'active'}`}
+                className={`font-bold ${isActive("/") && "active"}`}
               >
                 Home
               </NavLink>
@@ -94,7 +95,7 @@ const Header = () => {
             <li>
               <NavLink
                 to="/about"
-                className={`font-bold ${isActive('/about') && 'active'}`}
+                className={`font-bold ${isActive("/about") && "active"}`}
               >
                 About
               </NavLink>
@@ -103,7 +104,7 @@ const Header = () => {
             <li>
               <NavLink
                 to="/tests"
-                className={`font-bold ${isActive('/tests') && 'active'}`}
+                className={`font-bold ${isActive("/tests") && "active"}`}
               >
                 Tests
               </NavLink>
@@ -112,7 +113,7 @@ const Header = () => {
             <li>
               <NavLink
                 to="/find-doctor"
-                className={`font-bold ${isActive('/find-doctor') && 'active'}`}
+                className={`font-bold ${isActive("/find-doctor") && "active"}`}
               >
                 Find Doctor
               </NavLink>
@@ -120,7 +121,7 @@ const Header = () => {
             <li>
               <NavLink
                 to="/contact"
-                className={`font-bold ${isActive('/contact') && 'active'}`}
+                className={`font-bold ${isActive("/contact") && "active"}`}
               >
                 Contact
               </NavLink>

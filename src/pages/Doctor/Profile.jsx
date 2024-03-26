@@ -1,75 +1,91 @@
-import React, { useState } from 'react';
-import Layout from '../../components/Layout/Layout';
-import img from '../../assets/doctor.jpg';
-import { Link } from 'react-router-dom';
-import { MdDelete } from 'react-icons/md';
+import React, { useState } from "react";
+import Layout from "../../components/Layout/Layout";
+import axios from "axios";
+import { MdDelete } from "react-icons/md";
+import Overview from "./Overview";
+import SeeAppointment from "./SeeAppointment";
 
 const DocProfile = () => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
 
+  // State variables
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [doctorName, setDoctorName] = useState("");
+  const [bio, setBio] = useState("");
+  const [about, setAbout] = useState("");
+  const [gender, setGender] = useState("");
+  const [ticketPrice, setTicketPrice] = useState("");
+  const [specialization_id, setSpecialization] = useState("");
+  const [newTimeSlots, setNewTimeSlots] = useState([]);
+  const [newQualifications, setNewQualifications] = useState([]);
+  const [newExperiences, setNewExperiences] = useState([]);
+  const [uploadedImage, setUploadedImage] = useState(null);
+
+  // Days of the week array
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+
+  // Function to handle changes in the "About" textarea
+  const handleAboutChange = (e) => {
+    setAbout(e.target.value);
+  };
+
+  // Function to handle tab click
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
-  const [qualifications, setQualifications] = useState([
-    { degree: 'MD', university: 'Medical University' },
-  ]);
 
-  const daysOfWeek = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-  ];
-  const [gender, setGender] = useState('');
-  const [specialization, setSpecialization] = useState('');
-  const [experiences, setExperiences] = useState([
-    {
-      startDate: '2020-01-01',
-      endDate: '2022-01-01',
-      position: 'Doctor',
-      hospital: 'City Hospital',
-    },
-  ]);
-
-  const [timeSlots, setTimeSlots] = useState([
-    { day: 'Monday', startTime: '09:00 AM', endTime: '05:00 PM' },
-  ]);
-
+  // Function to add a new qualification
   const addQualification = () => {
-    setQualifications([...qualifications, { degree: '', university: '' }]);
-  };
-  const removeQualification = (index) => {
-    const updatedQualifications = [...qualifications];
-    updatedQualifications.splice(index, 1);
-    setQualifications(updatedQualifications);
-  };
-
-  const addExperience = () => {
-    setExperiences([
-      ...experiences,
-      { startDate: '', endDate: '', position: '', hospital: '' },
+    setNewQualifications([
+      ...newQualifications,
+      { degree: "", university: "" },
     ]);
   };
 
-  const addTimeSlot = () => {
-    setTimeSlots([...timeSlots, { day: '', startTime: '', endTime: '' }]);
+  // Function to remove a qualification
+  const removeQualification = (index) => {
+    const updatedQualifications = [...newQualifications];
+    updatedQualifications.splice(index, 1);
+    setNewQualifications(updatedQualifications);
   };
+
+  // Function to add a new experience
+  const addExperience = () => {
+    setNewExperiences([
+      ...newExperiences,
+      { startDate: "", endDate: "", position: "", hospital: "" },
+    ]);
+  };
+
+  // Function to remove an experience
   const removeExperience = (index) => {
-    const updatedExperiences = [...experiences];
+    const updatedExperiences = [...newExperiences];
     updatedExperiences.splice(index, 1);
-    setExperiences(updatedExperiences);
+    setNewExperiences(updatedExperiences);
   };
 
+  // Function to add a new time slot
+  const addTimeSlot = () => {
+    setNewTimeSlots([...newTimeSlots, { day: "", startTime: "", endTime: "" }]);
+  };
+
+  // Function to remove a time slot
   const removeTimeSlot = (index) => {
-    const updatedTimeSlots = [...timeSlots];
+    const updatedTimeSlots = [...newTimeSlots];
     updatedTimeSlots.splice(index, 1);
-    setTimeSlots(updatedTimeSlots);
+    setNewTimeSlots(updatedTimeSlots);
   };
-  const [uploadedImage, setUploadedImage] = useState(null);
 
+  // Function to handle image upload
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -83,9 +99,34 @@ const DocProfile = () => {
     }
   };
 
-  const handleUpdateProfile = (e) => {
+  // Function to handle profile update
+  const handleUpdateProfile = async (e) => {
     e.preventDefault();
-    console.log('Profile updated!');
+    try {
+      const doctorId = 2; // Use the doctor's ID here
+      const response = await axios.post(
+        `http://localhost:8081/doctor/update-profile/2`,
+        {
+          phoneNumber,
+          email,
+          doctorName,
+          bio,
+          about,
+          gender,
+          ticketPrice,
+          specialization_id,
+          newTimeSlots,
+          newQualifications,
+          newExperiences,
+        }
+      );
+      console.log(newQualifications); // Log the response for debugging
+      console.log(response.data); // Log the response for debugging
+      // Handle success: show a success message to the user
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      // Handle error: show an error message to the user
+    }
   };
 
   return (
@@ -94,31 +135,31 @@ const DocProfile = () => {
         <div className="w-3/4 mb-10 lg:mb-0 mx-auto lg:mx-0 bg-white lg:w-2/6 h-1/2 p-4 flex-col flex items-center rounded-2xl mt-4 justify-center ">
           <button
             className={`w-40 p-2 mb-2 ${
-              activeTab === 'overview'
-                ? 'bg-[#D5D5D5] text-black rounded-lg'
-                : ''
+              activeTab === "overview"
+                ? "bg-[#D5D5D5] text-black rounded-lg"
+                : ""
             }`}
-            onClick={() => handleTabClick('overview')}
+            onClick={() => handleTabClick("overview")}
           >
             Overview
           </button>
           <button
             className={`w-40 p-2 mb-2 ${
-              activeTab === 'appointment'
-                ? 'bg-[#D5D5D5] text-black rounded-lg'
-                : ''
+              activeTab === "appointment"
+                ? "bg-[#D5D5D5] text-black rounded-lg"
+                : ""
             }`}
-            onClick={() => handleTabClick('appointment')}
+            onClick={() => handleTabClick("appointment")}
           >
             Appointment
           </button>
           <button
             className={`w-40 p-2 mb-10 ${
-              activeTab === 'profile'
-                ? 'bg-[#D5D5D5] text-black rounded-lg'
-                : ''
+              activeTab === "profile"
+                ? "bg-[#D5D5D5] text-black rounded-lg"
+                : ""
             }`}
-            onClick={() => handleTabClick('profile')}
+            onClick={() => handleTabClick("profile")}
           >
             Profile
           </button>
@@ -130,225 +171,13 @@ const DocProfile = () => {
           </button>
         </div>
 
-        {/* right section */}
-
         {/* Right Section with Container */}
         <div className="w-full lg:w-3/6 p-4">
           {/* Content based on activeTab */}
-          {activeTab === 'overview' && (
-            <div>
-              <div className="flex flex-col lg:flex-row">
-                <figure className="w-full flex items-center lg:w-1/3">
-                  <img src={img} alt="doctor img" />
-                </figure>
-                <div className="card-body mt-4 lg:mt-10 p-4 lg:w-1/2">
-                  <span className="bg-[#C0E8EB] text-gray-600 w-full  lg:w-2/5 text-center py-1 rounded-sm">
-                    Surgery Specialist
-                  </span>
-                  <h2 className="card-title text-2xl font-bold">
-                    Dr. Shyam Bahadur
-                  </h2>
+          {activeTab === "overview" && <Overview />}
+          {activeTab === "appointment" && <SeeAppointment />}
 
-                  <h3 className="card-title text-base font-light mb-0 lg:mb-6">
-                    Specialization in Surgery
-                  </h3>
-                </div>
-              </div>
-              <div className="mx-2 mt-10">
-                <h1 className="font-bold text-2xl mb-4">
-                  About Dr. Shya, Bahadur
-                </h1>
-                <p className="mb-4">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Distinctio sequi sapiente vel nulla quisquam est repellat
-                  nisi. Fuga deserunt ex officiis ut praesentium doloribus
-                  aperiam quia voluptate nam officia non doloremque similique
-                  corrupti maxime odio animi, deleniti nostrum culpa sed
-                  pariatur aliquid quas tempore? Quas similique consequatur
-                  aperiam eos quod dolorum ipsa deleniti magni laborum sint!
-                  Deserunt laboriosam voluptate vel!
-                </p>
-              </div>
-              <div className="mb-6">
-                <h2 className="font-bold text-lg">Education</h2>
-                <h4 className="text-[#7192F4]">2003-2007</h4>
-                <div className="mb-2">
-                  <h2 className="font-bold text-lg">Phd in Surgery</h2>
-                  <div className="flex justify-between items-center space-x-4">
-                    <h4 className="text-[#7192F4]">2003-2007</h4>
-                    <h4>New Apolo Hospital</h4>
-                  </div>
-                </div>
-                <div className="mb-2">
-                  <h2 className="font-bold text-lg">Md</h2>
-                  <div className="flex justify-between items-center space-x-4">
-                    <h4 className="text-[#7192F4]">2003-2007</h4>
-                    <h4>New Apolo Hospital</h4>
-                  </div>
-                </div>
-                <div className="mb-2">
-                  <h2 className="font-bold text-lg">MBBS</h2>
-                  <div className="flex justify-between items-center space-x-4">
-                    <h4 className="text-[#7192F4]">2003-2007</h4>
-                    <h4>New Apolo Hospital</h4>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <h2 className="font-bold text-lg mb-4">Experience</h2>
-                <div className="flex gap-x-4">
-                  <div className="bg-[#7192F4] px-3 py-5 rounded-lg">
-                    <h4 className="text-black">2003-2007</h4>
-                    <p>Residental Surgeon for hospital</p>
-                  </div>
-                  <div className="bg-[#7192F4] px-3 py-5 rounded-lg">
-                    <h4 className="text-black">2003-2007</h4>
-                    <p>Residental Surgeon for hospital</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          {activeTab === 'appointment' && (
-            <div>
-              <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-300">
-                  <thead>
-                    <tr>
-                      <th className="py-2 px-4 border-b">Name</th>
-                      <th className="py-2 px-4 border-b">Gender</th>
-                      <th className="py-2 px-4 border-b">Payment</th>
-                      <th className="py-2 px-4 border-b">Price</th>
-                      <th className="py-2 px-4 border-b">Booked On</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="py-2 px-4 border-b">
-                        <div className="flex items-center">
-                          <img
-                            className="w-8 h-8 rounded-full mr-2"
-                            src="https://placekitten.com/40/40"
-                            alt="Profile"
-                          />
-                          <div>
-                            <p className="font-bold">John Doe</p>
-                            <p className="text-gray-500">john.doe@gmail.com</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-2 px-4 border-b text-center">Male</td>
-                      <td className="py-2 px-4 border-b">Credit Card</td>
-                      <td className="py-2 px-4 border-b">Paid</td>
-
-                      <td className="py-2 px-4 border-b">2024-01-24</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-4 border-b">
-                        <div className="flex items-center">
-                          <img
-                            className="w-8 h-8 rounded-full mr-2"
-                            src="https://placekitten.com/40/40"
-                            alt="Profile"
-                          />
-                          <div>
-                            <p className="font-bold">John Doe</p>
-                            <p className="text-gray-500">john.doe@gmail.com</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-2 px-4 border-b text-center">Male</td>
-                      <td className="py-2 px-4 border-b">Credit Card</td>
-                      <td className="py-2 px-4 border-b">Paid</td>
-
-                      <td className="py-2 px-4 border-b">2024-01-24</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-4 border-b">
-                        <div className="flex items-center">
-                          <img
-                            className="w-8 h-8 rounded-full mr-2"
-                            src="https://placekitten.com/40/40"
-                            alt="Profile"
-                          />
-                          <div>
-                            <p className="font-bold">John Doe</p>
-                            <p className="text-gray-500">john.doe@gmail.com</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-2 px-4 border-b text-center">Male</td>
-                      <td className="py-2 px-4 border-b">Credit Card</td>
-                      <td className="py-2 px-4 border-b">Paid</td>
-
-                      <td className="py-2 px-4 border-b">2024-01-24</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-4 border-b">
-                        <div className="flex items-center">
-                          <img
-                            className="w-8 h-8 rounded-full mr-2"
-                            src="https://placekitten.com/40/40"
-                            alt="Profile"
-                          />
-                          <div>
-                            <p className="font-bold">John Doe</p>
-                            <p className="text-gray-500">john.doe@gmail.com</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-2 px-4 border-b text-center">Male</td>
-                      <td className="py-2 px-4 border-b">Credit Card</td>
-                      <td className="py-2 px-4 border-b">Paid</td>
-
-                      <td className="py-2 px-4 border-b">2024-01-24</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-4 border-b">
-                        <div className="flex items-center">
-                          <img
-                            className="w-8 h-8 rounded-full mr-2"
-                            src="https://placekitten.com/40/40"
-                            alt="Profile"
-                          />
-                          <div>
-                            <p className="font-bold">John Doe</p>
-                            <p className="text-gray-500">john.doe@gmail.com</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-2 px-4 border-b text-center">Male</td>
-                      <td className="py-2 px-4 border-b">Credit Card</td>
-                      <td className="py-2 px-4 border-b">Paid</td>
-
-                      <td className="py-2 px-4 border-b">2024-01-24</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-4 border-b">
-                        <div className="flex items-center">
-                          <img
-                            className="w-8 h-8 rounded-full mr-2"
-                            src="https://placekitten.com/40/40"
-                            alt="Profile"
-                          />
-                          <div>
-                            <p className="font-bold">John Doe</p>
-                            <p className="text-gray-500">john.doe@gmail.com</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-2 px-4 border-b text-center">Male</td>
-                      <td className="py-2 px-4 border-b">Credit Card</td>
-                      <td className="py-2 px-4 border-b">Paid</td>
-
-                      <td className="py-2 px-4 border-b">2024-01-24</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-          {activeTab === 'profile' && (
+          {activeTab === "profile" && (
             <div className="bg-white rounded-2xl pt-4 px-5">
               <form
                 onSubmit={handleUpdateProfile}
@@ -367,6 +196,8 @@ const DocProfile = () => {
                       <input
                         type="text"
                         id="name"
+                        value={doctorName}
+                        onChange={(e) => setDoctorName(e.target.value)}
                         className="w-full p-2 border mb-2 rounded-md"
                         required
                       />
@@ -376,6 +207,8 @@ const DocProfile = () => {
                       <input
                         type="email"
                         id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         className="w-full p-2 border mb-2  rounded-md"
                         required
                       />
@@ -385,6 +218,8 @@ const DocProfile = () => {
                       <input
                         type="tel"
                         id="phone"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
                         className="w-full p-2 border mb-2 rounded-md"
                         required
                       />
@@ -394,6 +229,8 @@ const DocProfile = () => {
                       <textarea
                         id="bio"
                         rows="2"
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
                         className="w-full p-2 border mb-2 rounded-md"
                         required
                       ></textarea>
@@ -410,24 +247,23 @@ const DocProfile = () => {
                             required
                           >
                             <option value="">Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
                           </select>
                         </div>
                         <div>
                           <label htmlFor="specialization">Specialization</label>
                           <select
                             id="specialization"
-                            value={specialization}
+                            value={specialization_id}
                             onChange={(e) => setSpecialization(e.target.value)}
                             className="w-full p-2 border border-black rounded-md focus:outline-none focus:border-blue-500"
                             required
                           >
                             <option value="">Select Specialization</option>
-                            <option value="cardiologist">Cardiologist</option>
-                            <option value="dermatologist">Dermatologist</option>
-                            <option value="pediatrician">Pediatrician</option>
+                            <option value="1">Cardiologist</option>
+                            <option value="2">Dermatologist</option>
                             {/* Add more options as needed */}
                           </select>
                         </div>
@@ -436,6 +272,8 @@ const DocProfile = () => {
                           <input
                             type="text"
                             id="ticketPrice"
+                            value={ticketPrice}
+                            onChange={(e) => setTicketPrice(e.target.value)}
                             className="w-full p-2 border rounded-md"
                             required
                           />
@@ -448,7 +286,7 @@ const DocProfile = () => {
                 {/* Qualifications */}
                 <div className="mb-4">
                   <h2 className="text-xl font-bold mb-2">Qualifications</h2>
-                  {qualifications.map((qualification, index) => (
+                  {newQualifications.map((qualification, index) => (
                     <div key={index} className="grid grid-cols-3 gap-4 mb-2">
                       <div>
                         <label htmlFor={`degree-${index}`}>Degree</label>
@@ -457,10 +295,12 @@ const DocProfile = () => {
                           id={`degree-${index}`}
                           value={qualification.degree}
                           onChange={(e) => {
-                            const updatedQualifications = [...qualifications];
+                            const updatedQualifications = [
+                              ...newQualifications,
+                            ];
                             updatedQualifications[index].degree =
                               e.target.value;
-                            setQualifications(updatedQualifications);
+                            setNewQualifications(updatedQualifications);
                           }}
                           className="w-full p-2 border  rounded-md"
                           required
@@ -475,10 +315,12 @@ const DocProfile = () => {
                           id={`university-${index}`}
                           value={qualification.university}
                           onChange={(e) => {
-                            const updatedQualifications = [...qualifications];
+                            const updatedQualifications = [
+                              ...newQualifications,
+                            ];
                             updatedQualifications[index].university =
                               e.target.value;
-                            setQualifications(updatedQualifications);
+                            setNewQualifications(updatedQualifications);
                           }}
                           className=" p-2 border  rounded-md"
                           required
@@ -506,7 +348,7 @@ const DocProfile = () => {
                 {/* Experiences */}
                 <div className="mb-4">
                   <h2 className="text-xl font-bold mb-2">Experiences</h2>
-                  {experiences.map((experience, index) => (
+                  {newExperiences.map((experience, index) => (
                     <div key={index} className="grid grid-cols-2 gap-4 mb-2">
                       <div>
                         <label htmlFor={`startDate-${index}`}>Start Date</label>
@@ -515,10 +357,10 @@ const DocProfile = () => {
                           id={`startDate-${index}`}
                           value={experience.startDate}
                           onChange={(e) => {
-                            const updatedExperiences = [...experiences];
+                            const updatedExperiences = [...newExperiences];
                             updatedExperiences[index].startDate =
                               e.target.value;
-                            setExperiences(updatedExperiences);
+                            setNewExperiences(updatedExperiences);
                           }}
                           className="w-full p-2 border  rounded-md"
                           required
@@ -531,9 +373,9 @@ const DocProfile = () => {
                           id={`endDate-${index}`}
                           value={experience.endDate}
                           onChange={(e) => {
-                            const updatedExperiences = [...experiences];
+                            const updatedExperiences = [...newExperiences];
                             updatedExperiences[index].endDate = e.target.value;
-                            setExperiences(updatedExperiences);
+                            setNewExperiences(updatedExperiences);
                           }}
                           className="w-full p-2 border rounded-md"
                           required
@@ -546,9 +388,9 @@ const DocProfile = () => {
                           id={`position-${index}`}
                           value={experience.position}
                           onChange={(e) => {
-                            const updatedExperiences = [...experiences];
+                            const updatedExperiences = [...newExperiences];
                             updatedExperiences[index].position = e.target.value;
-                            setExperiences(updatedExperiences);
+                            setNewExperiences(updatedExperiences);
                           }}
                           className="w-full p-2 border rounded-md"
                           required
@@ -561,9 +403,9 @@ const DocProfile = () => {
                           id={`hospital-${index}`}
                           value={experience.hospital}
                           onChange={(e) => {
-                            const updatedExperiences = [...experiences];
+                            const updatedExperiences = [...newExperiences];
                             updatedExperiences[index].hospital = e.target.value;
-                            setExperiences(updatedExperiences);
+                            setNewExperiences(updatedExperiences);
                           }}
                           className="w-full p-2 border rounded-md"
                           required
@@ -591,7 +433,7 @@ const DocProfile = () => {
                 {/* Time Slots */}
                 <div className="mb-4">
                   <h2 className="text-xl font-bold mb-2">Time Slots</h2>
-                  {timeSlots.map((slot, index) => (
+                  {newTimeSlots.map((slot, index) => (
                     <div key={index} className="grid grid-cols-3 gap-4 mb-2">
                       <div>
                         <label htmlFor={`day-${index}`}>Day</label>
@@ -599,9 +441,9 @@ const DocProfile = () => {
                           id={`day-${index}`}
                           value={slot.day}
                           onChange={(e) => {
-                            const updatedTimeSlots = [...timeSlots];
+                            const updatedTimeSlots = [...newTimeSlots];
                             updatedTimeSlots[index].day = e.target.value;
-                            setTimeSlots(updatedTimeSlots);
+                            setNewTimeSlots(updatedTimeSlots);
                           }}
                           className="w-full p-2 border rounded-md focus:outline-none border-black focus:border-blue-500"
                         >
@@ -622,9 +464,9 @@ const DocProfile = () => {
                           id={`startTime-${index}`}
                           value={slot.startTime}
                           onChange={(e) => {
-                            const updatedTimeSlots = [...timeSlots];
+                            const updatedTimeSlots = [...newTimeSlots];
                             updatedTimeSlots[index].startTime = e.target.value;
-                            setTimeSlots(updatedTimeSlots);
+                            setNewTimeSlots(updatedTimeSlots);
                           }}
                           className="w-full p-2 border rounded-md"
                           required
@@ -637,9 +479,9 @@ const DocProfile = () => {
                           id={`endTime-${index}`}
                           value={slot.endTime}
                           onChange={(e) => {
-                            const updatedTimeSlots = [...timeSlots];
+                            const updatedTimeSlots = [...newTimeSlots];
                             updatedTimeSlots[index].endTime = e.target.value;
-                            setTimeSlots(updatedTimeSlots);
+                            setNewTimeSlots(updatedTimeSlots);
                           }}
                           className="w-full p-2 border rounded-md"
                           required
@@ -665,38 +507,49 @@ const DocProfile = () => {
                 </div>
 
                 {/* About and Image */}
-                <div>
-                  <h2 className="text-xl font-bold mb-2">About</h2>
-                  <textarea
-                    id="about"
-                    rows="4"
-                    className="w-full p-2 border mb-4"
-                    required
-                  ></textarea>
-                  <label htmlFor="image" className="text-xl font-bold mb-2">
-                    Add Image
-                  </label>
-                  <div className="flex items-center mt-2 gap-x-2">
-                    {uploadedImage && (
-                      <img
-                        src={uploadedImage}
-                        alt="Profile"
-                        className="w-12 h-12 rounded-full mb-4"
+                <div className="mb-4">
+                  <h2 className="text-xl font-bold mb-2">About and Image</h2>
+                  <div className="grid grid-cols-1 gap-4 mb-2">
+                    <div>
+                      <label htmlFor="about">About</label>
+                      <textarea
+                        id="about"
+                        rows="4"
+                        value={about}
+                        onChange={handleAboutChange}
+                        className="w-full p-2 border rounded-md"
+                        required
+                      ></textarea>
+                    </div>
+                    <div>
+                      <label htmlFor="image">Profile Image</label>
+                      <input
+                        type="file"
+                        id="image"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="w-full p-2 border rounded-md"
                       />
-                    )}
-                    <input
-                      type="file"
-                      id="image"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="w-full p-2 border mb-4"
-                      required
-                    />
+                    </div>
+                    <div>
+                      {uploadedImage && (
+                        <img
+                          src={uploadedImage}
+                          alt="Uploaded"
+                          className="w-40 h-40 object-cover"
+                        />
+                      )}
+                    </div>
                   </div>
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded">
-                    Update Profile
-                  </button>
                 </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                >
+                  Update Profile
+                </button>
               </form>
             </div>
           )}

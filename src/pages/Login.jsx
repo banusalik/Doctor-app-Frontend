@@ -25,29 +25,37 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8081/paitent/login", {
+      console.log("i am here");
+      const response = await fetch("http://localhost:8081/patients/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "content-type": "application/json ",
         },
         body: JSON.stringify({ email, password }),
       });
 
+      console.log("response", response);
+
       if (response.ok) {
         // Handle successful login
         const data = await response.json();
-        console.log("Paitent Login successful:", data);
+        console.log("Patient Login successful:", data);
 
         // Store the patient's photo URL in local storage
         localStorage.setItem("patientPhoto", data.photoURL);
 
         // Redirect or do something else after successful login
+        // For now, let's redirect to home page
+        window.location.href = "/"; // Redirect to home page
       } else {
         // Handle login failure
-        console.error("Paitent Login failed");
+        console.error("Patient Login failed");
+        // Extract error message from response
+        const errorMessage = await response.text();
+        setError(errorMessage); // Set error message state
       }
     } catch (error) {
-      console.error("Error during Paitent login:", error);
+      console.error("Error during Patient login:", error);
     }
   };
 
@@ -121,11 +129,12 @@ const Login = () => {
                   )}
                 </div>
               </div>
-              <Link to="/">
-                <button className="w-full py-3 text-md bg-btnColor mb-3 font-bold text-white rounded-md hover:bg-blue-600">
-                  Login
-                </button>
-              </Link>
+              <button
+                type="submit"
+                className="w-full py-3 text-md bg-btnColor mb-3 font-bold text-white rounded-md hover:bg-blue-600"
+              >
+                Login
+              </button>
               <div className="text-md text-center mb-4">
                 Don't have an Account?
                 <span className=" ml-2 text-darkBlue">
