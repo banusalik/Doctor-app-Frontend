@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import AdminHome from './AdminHome';
-import { FaSearch } from 'react-icons/fa';
-import { CiEdit } from 'react-icons/ci';
-import { MdDelete } from 'react-icons/md';
-import Pagination from '../../components/Admin/Pagination';
-import AddNewPatientModal from '../../components/Admin/AddNewPatientModal';
-import Modal from '../../components/Admin/Modal';
+import React, { useState } from "react";
+import AdminHome from "./AdminHome";
+import { FaSearch } from "react-icons/fa";
+import { CiEdit } from "react-icons/ci";
+import { MdDelete } from "react-icons/md";
+import Pagination from "../../components/Admin/Pagination";
+import AddNewPatientModal from "../../components/Admin/AddNewPatientModal";
+import Modal from "../../components/Admin/Modal";
 
 const PatientList = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -21,7 +21,7 @@ const PatientList = () => {
   const handleNewPatientSubmit = () => {
     // Handle new patient form submission logic
     // You may want to update state or perform other actions
-    console.log('New patient submitted!');
+    console.log("New patient submitted!");
     closeModal();
   };
 
@@ -41,11 +41,11 @@ const PatientList = () => {
       id: index + 1,
       patientId: `P${index + 1}`,
       patientName: `Patient ${index + 1}`,
-      number: `555-555-${index + 1}`,
-      firstVisit: `2024-01-${index + 1}`,
+      phoneNumber: `555-555-${index + 1}`,
+      recentVisit: `2024-01-${index + 1}`,
       doctor: `Dr. Smith ${index + 1}`,
-      appointment: `Doctor ${index + 1}`,
-      numberOfVisits: '10',
+      appointmentId: `A ${index + 1}`,
+      numberOfVisits: "10",
     }));
 
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -56,10 +56,10 @@ const PatientList = () => {
       <tr key={item.id}>
         <td className="py-4 px-6 border text-center">{item.patientId}</td>
         <td className="py-4 px-6 border text-center">{item.patientName}</td>
-        <td className="py-4 px-6 border text-center">{item.number}</td>
-        <td className="py-4 px-6 border text-center">{item.firstVisit}</td>
+        <td className="py-4 px-6 border text-center">{item.phoneNumber}</td>
+        <td className="py-4 px-6 border text-center">{item.recentVisit}</td>
         <td className="py-4 px-6 border text-center">{item.doctor}</td>
-        <td className="py-4 px-6 border text-center">{item.appointment}</td>
+        <td className="py-4 px-6 border text-center">{item.appointmentId}</td>
         <td className="py-4 px-6 border text-center flex items-center justify-center">
           <span className=" h-8 w-8 rounded-full bg-yellow-500 text-white flex items-center justify-center">
             {item.numberOfVisits}
@@ -119,8 +119,8 @@ const PatientList = () => {
                 <tr className="bg-gray-200">
                   <th className="py-4 px-6 border">Patient ID</th>
                   <th className="py-4 px-6 border">Patient Name</th>
-                  <th className="py-4 px-6 border">Number</th>
-                  <th className="py-4 px-6 border">First Visit</th>
+                  <th className="py-4 px-6 border">Phone Number</th>
+                  <th className="py-4 px-6 border">Recent Visit</th>
                   <th className="py-4 px-6 border">Doctor</th>
                   <th className="py-4 px-6 border">Appointment</th>
                   <th className="py-4 px-6 border">No. of Visits</th>

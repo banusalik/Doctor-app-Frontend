@@ -1,7 +1,7 @@
 // Assuming you're using React
 
-import React, { useState } from 'react';
-import { IoCloseSharp } from 'react-icons/io5';
+import React, { useState } from "react";
+import { IoCloseSharp } from "react-icons/io5";
 
 const CreateRatingModal = ({ onClose }) => {
   const [rating, setRating] = useState(0); // Initial rating state
@@ -25,7 +25,7 @@ const CreateRatingModal = ({ onClose }) => {
             <svg
               key={star}
               className={`w-6 h-6 lg:w-9 lg:h-9 cursor-pointer ${
-                star <= rating ? 'text-yellow-300' : 'text-gray-400'
+                star <= rating ? "text-yellow-300" : "text-gray-400"
               }`}
               onClick={() => handleStarClick(star)}
               aria-hidden="true"
@@ -51,7 +51,7 @@ const CreateRatingModal = ({ onClose }) => {
         {/* Close button */}
         <button
           className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-          onClick={() => console.log('Submit Review')} // Replace with your logic
+          onClick={() => console.log("Submit Review")} // Replace with your logic
         >
           Submit Review
         </button>

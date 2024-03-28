@@ -1,20 +1,22 @@
-// HighlyRatedDoctor.jsx
-
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 const HighlyRatedDoctor = ({ doctor }) => {
-  const { name, specialty, rating, hospital, avatarUrl } = doctor;
+  const { Doctor_Name, Speciality, Rating, Address, Image } = doctor;
 
   return (
-    <div className="flex items-center bg-white p-4 rounded-md shadow-md mb-4">
+    <div
+      className="flex items-center bg-white p-4 rounded-md shadow-md mb-4"
+      style={{ height: "200px" }}
+    >
       {/* Doctor Avatar/Image */}
       <div className="flex-shrink-0 w-16 h-16 bg-gray-300 rounded-full mr-4 overflow-hidden">
         {/* You can use an actual image or placeholder here */}
-        {avatarUrl && (
+        {Image && (
           <img
-            src={avatarUrl}
-            alt={name}
+            src={Image}
+            alt={Doctor_Name}
             className="w-full h-full rounded-full object-cover"
           />
         )}
@@ -24,11 +26,13 @@ const HighlyRatedDoctor = ({ doctor }) => {
       <div className="flex-1">
         {/* Doctor Name */}
         <Link to="/doctor-details">
-          <h3 className="text-lg font-semibold cursor-pointer">{name}</h3>
+          <h3 className="text-lg font-semibold cursor-pointer">
+            {Doctor_Name}
+          </h3>
         </Link>
 
         {/* Doctor Specialty */}
-        <p className="text-gray-600 mb-2">{specialty}</p>
+        <p className="text-gray-600 mb-2">{Speciality}</p>
 
         {/* Doctor Rating */}
         <div className="flex items-center mb-2">
@@ -42,14 +46,25 @@ const HighlyRatedDoctor = ({ doctor }) => {
           >
             <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
           </svg>
-          <span className="text-blue-500 font-bold mt-1">{rating}</span>
+          <span className="text-blue-500 font-bold mt-1">{Rating}</span>
         </div>
 
         {/* Hospital */}
-        <p className="text-gray-500">{hospital}</p>
+        <p className="text-gray-500">{Address}</p>
       </div>
     </div>
   );
+};
+
+// Prop Types
+HighlyRatedDoctor.propTypes = {
+  doctor: PropTypes.shape({
+    Doctor_Name: PropTypes.string.isRequired,
+    Speciality: PropTypes.string.isRequired,
+    Rating: PropTypes.number.isRequired,
+    Address: PropTypes.string.isRequired,
+    Image: PropTypes.string, // Make image optional
+  }).isRequired,
 };
 
 export default HighlyRatedDoctor;

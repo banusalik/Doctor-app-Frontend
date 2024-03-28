@@ -9,9 +9,11 @@ const FindDoctor = () => {
   // Fetch all doctor data
   const fetchAllDoctorData = async () => {
     try {
+      console.log("Fetching all doctor data...");
       const response = await fetch("http://localhost:8081/doctor/");
       if (response.ok) {
         const data = await response.json();
+        console.log("Fetched doctor data:", data);
         if (data.status) {
           setDoctorData(data.doctor); // Update state with fetched doctor data
         } else {
@@ -79,12 +81,12 @@ const FindDoctor = () => {
             doctorData.map((doctor, index) => (
               <Cards
                 key={index} // Use a unique key for each card
-                imgSrc={doctor.Image}
-                name={doctor.Doctor_Name}
-                specialty={doctor.Bio}
-                rating={doctor.Ticket_Price}
-                ratingList={doctor.Phone_Number ? 1 : 0}
-                location={doctor.Address}
+                Image={doctor.Image}
+                Doctor_Name={doctor.Doctor_Name}
+                Speciality={doctor.Speciality}
+                Rating={doctor.Rating}
+                Phone_Number={doctor.Phone_Number ? 1 : 0}
+                Address={doctor.Address}
                 link="/doctor-details"
               />
             ))}

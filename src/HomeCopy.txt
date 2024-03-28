@@ -6,11 +6,11 @@ import location from "../assets/location.png";
 import appointment from "../assets/book-appointment.png";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import HighlyRatedDoctor from "../components/HighlyRatedDoctor";
 import { FaCircle } from "react-icons/fa";
 import { GoDash } from "react-icons/go";
 import Cards from "../components/Cards";
 import { IoStarSharp } from "react-icons/io5";
-import HighlyRatedDoctor from "../components/HighlyRatedDoctor";
 
 const HomePage = () => {
   const [doctors, setDoctors] = useState([]);
@@ -49,25 +49,22 @@ const HomePage = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await fetch("http://localhost:8081/doctor");
+      const response = await fetch("http://localhost:8081/doctor/");
       if (!response.ok) {
         throw new Error("Error fetching doctor data");
       }
       const responseData = await response.json();
-      if (responseData.status) {
-        const doctorsData = responseData.data; // Access the 'data' array
+      if (responseData.status && responseData.doctor) {
+        const doctorsData = responseData.doctor.slice(0, 3); // Get the first 3 doctor objects
         return doctorsData.map((doctor) => ({
-          Image: doctor.Image ? doctor.Image : "default-image.png",
+          Image: doctor.Image ? doctor.Image : "default-image.png", // Use a default image if Image is null
           Doctor_Name: doctor.Doctor_Name
             ? doctor.Doctor_Name
-            : "Unknown Doctor",
-          Speciality: doctor.Bio ? doctor.Bio : "Unknown Specialty",
-          Rating: doctor.Rating ? doctor.Rating : 0,
-          Address: doctor.Address ? doctor.Address : "Unknown Hospital",
-          // Add other properties as needed
+            : "Unknown Doctor", // Use "Unknown Doctor" if Doctor_Name is null
+          ...doctor, // Include other properties as they are
         }));
       } else {
-        throw new Error(responseData.message || "Invalid doctor data format");
+        throw new Error("Invalid doctor data format");
       }
     } catch (error) {
       console.error("Error fetching doctor data:", error);
@@ -370,9 +367,17 @@ const HomePage = () => {
           Our Highly Rated Doctors
         </h2>
         <div className="max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {/* Map through doctors and render HighlyRatedDoctor component */}
+          {/* Map through doctors and render Cards component */}
           {doctors.map((doctor, index) => (
-            <HighlyRatedDoctor key={index} doctor={doctor} />
+            <Cards
+              key={index}
+              imgSrc={doctor.Image} // Make sure the property name matches the data structure
+              name={doctor.Doctor_Name}
+              specialty={doctor.Speciality}
+              rating={doctor.Rating}
+              location={doctor.Address}
+              link="/doctor-details"
+            />
           ))}
         </div>
       </div>

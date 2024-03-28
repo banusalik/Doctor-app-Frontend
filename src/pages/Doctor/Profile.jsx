@@ -17,10 +17,32 @@ const DocProfile = () => {
   const [gender, setGender] = useState("");
   const [ticketPrice, setTicketPrice] = useState("");
   const [specialization_id, setSpecialization] = useState("");
-  const [newTimeSlots, setNewTimeSlots] = useState([]);
-  const [newQualifications, setNewQualifications] = useState([]);
-  const [newExperiences, setNewExperiences] = useState([]);
-  const [uploadedImage, setUploadedImage] = useState(null);
+  const [newTimeSlots, setNewTimeSlots] = useState([
+    {
+      Start_Time: "",
+      End_Time: "",
+      Day: "",
+      Doctor_ID: 1,
+    },
+  ]);
+  // const [newQualifications, setNewQualifications] = useState([]);
+  const [newQualifications, setNewQualifications] = useState([
+    {
+      Degree: "",
+      University: "",
+      Doctor_ID: 1,
+    },
+  ]);
+  const [newExperiences, setNewExperiences] = useState([
+    {
+      Start_Date: "",
+      End_Date: "",
+      Position: "",
+      Hospital: "",
+      Doctor_ID: 1,
+    },
+  ]);
+  const [image, setimage] = useState(null);
 
   // Days of the week array
   const daysOfWeek = [
@@ -43,11 +65,10 @@ const DocProfile = () => {
     setActiveTab(tab);
   };
 
-  // Function to add a new qualification
   const addQualification = () => {
     setNewQualifications([
       ...newQualifications,
-      { degree: "", university: "" },
+      { Degree: "", University: "", Doctor_ID: 1 },
     ]);
   };
 
@@ -57,7 +78,6 @@ const DocProfile = () => {
     updatedQualifications.splice(index, 1);
     setNewQualifications(updatedQualifications);
   };
-
   // Function to add a new experience
   const addExperience = () => {
     setNewExperiences([
@@ -91,7 +111,7 @@ const DocProfile = () => {
     const reader = new FileReader();
 
     reader.onloadend = () => {
-      setUploadedImage(reader.result);
+      setimage(file);
     };
 
     if (file) {
@@ -103,21 +123,27 @@ const DocProfile = () => {
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     try {
-      const doctorId = 2; // Use the doctor's ID here
+      const formData = new FormData();
+      formData.append("image", image);
+      formData.append("phoneNumber", phoneNumber);
+      formData.append("email", email);
+      formData.append("doctorName", doctorName);
+      formData.append("bio", bio);
+      formData.append("about", about);
+      formData.append("gender", gender);
+      formData.append("ticketPrice", ticketPrice);
+      formData.append("specialization_id", specialization_id);
+      formData.append("newTimeSlots", JSON.stringify(newTimeSlots));
+      formData.append("newQualifications", JSON.stringify(newQualifications));
+      formData.append("newExperiences", JSON.stringify(newExperiences));
+
       const response = await axios.post(
-        `http://localhost:8081/doctor/update-profile/2`,
+        `http://localhost:8081/doctor/update-profile/1`,
+        formData,
         {
-          phoneNumber,
-          email,
-          doctorName,
-          bio,
-          about,
-          gender,
-          ticketPrice,
-          specialization_id,
-          newTimeSlots,
-          newQualifications,
-          newExperiences,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       console.log(newQualifications); // Log the response for debugging
@@ -289,16 +315,16 @@ const DocProfile = () => {
                   {newQualifications.map((qualification, index) => (
                     <div key={index} className="grid grid-cols-3 gap-4 mb-2">
                       <div>
-                        <label htmlFor={`degree-${index}`}>Degree</label>
+                        <label htmlFor={`Degree-${index}`}>Degree</label>
                         <input
                           type="text"
-                          id={`degree-${index}`}
-                          value={qualification.degree}
+                          id={`Degree-${index}`}
+                          value={qualification.Degree}
                           onChange={(e) => {
                             const updatedQualifications = [
                               ...newQualifications,
                             ];
-                            updatedQualifications[index].degree =
+                            updatedQualifications[index].Degree =
                               e.target.value;
                             setNewQualifications(updatedQualifications);
                           }}
@@ -307,18 +333,18 @@ const DocProfile = () => {
                         />
                       </div>
                       <div>
-                        <label htmlFor={`university-${index}`}>
+                        <label htmlFor={`University-${index}`}>
                           University
                         </label>
                         <input
                           type="text"
-                          id={`university-${index}`}
-                          value={qualification.university}
+                          id={`University-${index}`}
+                          value={qualification.University}
                           onChange={(e) => {
                             const updatedQualifications = [
                               ...newQualifications,
                             ];
-                            updatedQualifications[index].university =
+                            updatedQualifications[index].University =
                               e.target.value;
                             setNewQualifications(updatedQualifications);
                           }}
@@ -351,14 +377,16 @@ const DocProfile = () => {
                   {newExperiences.map((experience, index) => (
                     <div key={index} className="grid grid-cols-2 gap-4 mb-2">
                       <div>
-                        <label htmlFor={`startDate-${index}`}>Start Date</label>
+                        <label htmlFor={`Start_Date-${index}`}>
+                          Start Date
+                        </label>
                         <input
                           type="date"
-                          id={`startDate-${index}`}
-                          value={experience.startDate}
+                          id={`Start_Date-${index}`}
+                          value={experience.Start_Date}
                           onChange={(e) => {
                             const updatedExperiences = [...newExperiences];
-                            updatedExperiences[index].startDate =
+                            updatedExperiences[index].Start_Date =
                               e.target.value;
                             setNewExperiences(updatedExperiences);
                           }}
@@ -367,14 +395,14 @@ const DocProfile = () => {
                         />
                       </div>
                       <div>
-                        <label htmlFor={`endDate-${index}`}>End Date</label>
+                        <label htmlFor={`End_Date-${index}`}>End Date</label>
                         <input
                           type="date"
-                          id={`endDate-${index}`}
-                          value={experience.endDate}
+                          id={`End_Date-${index}`}
+                          value={experience.End_Date}
                           onChange={(e) => {
                             const updatedExperiences = [...newExperiences];
-                            updatedExperiences[index].endDate = e.target.value;
+                            updatedExperiences[index].End_Date = e.target.value;
                             setNewExperiences(updatedExperiences);
                           }}
                           className="w-full p-2 border rounded-md"
@@ -382,14 +410,14 @@ const DocProfile = () => {
                         />
                       </div>
                       <div>
-                        <label htmlFor={`position-${index}`}>Position</label>
+                        <label htmlFor={`Position-${index}`}>Position</label>
                         <input
                           type="text"
-                          id={`position-${index}`}
-                          value={experience.position}
+                          id={`Position-${index}`}
+                          value={experience.Position}
                           onChange={(e) => {
                             const updatedExperiences = [...newExperiences];
-                            updatedExperiences[index].position = e.target.value;
+                            updatedExperiences[index].Position = e.target.value;
                             setNewExperiences(updatedExperiences);
                           }}
                           className="w-full p-2 border rounded-md"
@@ -397,14 +425,14 @@ const DocProfile = () => {
                         />
                       </div>
                       <div>
-                        <label htmlFor={`hospital-${index}`}>Hospital</label>
+                        <label htmlFor={`Hospital-${index}`}>Hospital</label>
                         <input
                           type="text"
-                          id={`hospital-${index}`}
-                          value={experience.hospital}
+                          id={`Hospital-${index}`}
+                          value={experience.Hospital}
                           onChange={(e) => {
                             const updatedExperiences = [...newExperiences];
-                            updatedExperiences[index].hospital = e.target.value;
+                            updatedExperiences[index].Hospital = e.target.value;
                             setNewExperiences(updatedExperiences);
                           }}
                           className="w-full p-2 border rounded-md"
@@ -436,13 +464,13 @@ const DocProfile = () => {
                   {newTimeSlots.map((slot, index) => (
                     <div key={index} className="grid grid-cols-3 gap-4 mb-2">
                       <div>
-                        <label htmlFor={`day-${index}`}>Day</label>
+                        <label htmlFor={`Day-${index}`}>Day</label>
                         <select
-                          id={`day-${index}`}
-                          value={slot.day}
+                          id={`Day-${index}`}
+                          value={slot.Day}
                           onChange={(e) => {
                             const updatedTimeSlots = [...newTimeSlots];
-                            updatedTimeSlots[index].day = e.target.value;
+                            updatedTimeSlots[index].Day = e.target.value;
                             setNewTimeSlots(updatedTimeSlots);
                           }}
                           className="w-full p-2 border rounded-md focus:outline-none border-black focus:border-blue-500"
@@ -450,22 +478,24 @@ const DocProfile = () => {
                           <option value="" disabled>
                             Select Day
                           </option>
-                          {daysOfWeek.map((day) => (
-                            <option key={day} value={day}>
-                              {day}
+                          {daysOfWeek.map((Day) => (
+                            <option key={Day} value={Day}>
+                              {Day}
                             </option>
                           ))}
                         </select>
                       </div>
                       <div>
-                        <label htmlFor={`startTime-${index}`}>Start Time</label>
+                        <label htmlFor={`Start_Time-${index}`}>
+                          Start Time
+                        </label>
                         <input
                           type="time"
-                          id={`startTime-${index}`}
-                          value={slot.startTime}
+                          id={`Start_Time-${index}`}
+                          value={slot.Start_Time}
                           onChange={(e) => {
                             const updatedTimeSlots = [...newTimeSlots];
-                            updatedTimeSlots[index].startTime = e.target.value;
+                            updatedTimeSlots[index].Start_Time = e.target.value;
                             setNewTimeSlots(updatedTimeSlots);
                           }}
                           className="w-full p-2 border rounded-md"
@@ -473,14 +503,14 @@ const DocProfile = () => {
                         />
                       </div>
                       <div>
-                        <label htmlFor={`endTime-${index}`}>End Time</label>
+                        <label htmlFor={`End_Time-${index}`}>End Time</label>
                         <input
                           type="time"
-                          id={`endTime-${index}`}
-                          value={slot.endTime}
+                          id={`End_Time-${index}`}
+                          value={slot.End_Time}
                           onChange={(e) => {
                             const updatedTimeSlots = [...newTimeSlots];
-                            updatedTimeSlots[index].endTime = e.target.value;
+                            updatedTimeSlots[index].End_Time = e.target.value;
                             setNewTimeSlots(updatedTimeSlots);
                           }}
                           className="w-full p-2 border rounded-md"
@@ -532,9 +562,9 @@ const DocProfile = () => {
                       />
                     </div>
                     <div>
-                      {uploadedImage && (
+                      {image && (
                         <img
-                          src={uploadedImage}
+                          src={image}
                           alt="Uploaded"
                           className="w-40 h-40 object-cover"
                         />
