@@ -3,6 +3,7 @@ import Layout from "../components/Layout/Layout";
 import loggin from "../assets/Loggin.png";
 import { BiSolidHide, BiShowAlt } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -25,32 +26,26 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      console.log("i am here");
       const response = await fetch("http://localhost:8081/patients/login", {
         method: "POST",
         headers: {
-          "content-type": "application/json ",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       });
 
-      console.log("response", response);
-
       if (response.ok) {
-        // Handle successful login
         const data = await response.json();
         console.log("Patient Login successful:", data);
 
-        // Store the patient's photo URL in local storage
-        localStorage.setItem("patientPhoto", data.photoURL);
+        // Store token and user ID in cookie
+        Cookies.set("token", data.token, { expires: 1 }); // Expires in 1 day
+        Cookies.set("Patient_ID", data.data.Patient_ID, { expires: 1 }); // Expires in 1 day
 
-        // Redirect or do something else after successful login
-        // For now, let's redirect to home page
-        window.location.href = "/"; // Redirect to home page
+        // Redirect to home page
+        window.location.href = "/";
       } else {
-        // Handle login failure
         console.error("Patient Login failed");
-        // Extract error message from response
         const errorMessage = await response.text();
         setError(errorMessage); // Set error message state
       }
@@ -64,7 +59,7 @@ const Login = () => {
       <div className="min-h-[90vh] my-0 lg:my-20 flex items-center justify-center bg-gray-100">
         <div className="max-w-4xl w-full flex">
           {/* Left Side (Image) */}
-          <div className="hidden lg:block w-1\2">
+          <div className="hidden lg:block w-1/2">
             <img
               src={loggin}
               alt="Loggin"

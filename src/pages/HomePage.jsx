@@ -57,6 +57,7 @@ const HomePage = () => {
       if (responseData.status) {
         const doctorsData = responseData.data; // Access the 'data' array
         return doctorsData.map((doctor) => ({
+          Doctor_ID: doctor.Doctor_ID ? doctor.Doctor_ID : "bhetena",
           Image: doctor.Image ? doctor.Image : "default-image.png",
           Doctor_Name: doctor.Doctor_Name
             ? doctor.Doctor_Name

@@ -1,257 +1,116 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CreateRatingModal from "./CreateRatingModal";
 
 const Rating = () => {
-  // Sample data for illustration
-  const totalRating = 4.5;
-  const starRatings = { 5: 10, 4: 5, 3: 3, 2: 2, 1: 1 };
-
-  // Calculate total number of reviews
-  const totalReviews = Object.values(starRatings).reduce(
-    (acc, curr) => acc + curr,
-    0
-  );
+  // State to manage modal visibility
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // State to manage review data
+  const [reviewData, setReviewData] = useState({
+    rating: 0,
+    comment: "",
+  });
+  // State to store fetched reviews
+  const [reviews, setReviews] = useState([]);
 
+  // Function to open the modal
   const openModal = () => {
     setIsModalOpen(true);
   };
 
+  // Function to close the modal
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  // Function to handle changes in the review data
+  const handleReviewChange = (e) => {
+    const { name, value } = e.target;
+    setReviewData({
+      ...reviewData,
+      [name]: value,
+    });
+  };
+
+  // Function to handle submission of the review
+  const handleSubmitReview = async () => {
+    try {
+      // Send reviewData to the backend API
+      const response = await fetch("http://localhost:8081/doctor/review/2", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reviewData),
+      });
+      const data = await response.json();
+      console.log(data); // Log the response from the server
+      // Close the modal after successful submission
+      closeModal();
+      // Refetch reviews to update the list
+      fetchReviews();
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle error, show error message to the user, etc.
+    }
+  };
+
+  // Function to fetch reviews from the backend
+  const fetchReviews = async () => {
+    try {
+      // Fetch reviews from the backend API
+      const response = await fetch("http://localhost:8081/doctor/reviews/2");
+      const data = await response.json();
+      setReviews(data.reviews || []); // Update the reviews state with fetched data or an empty array
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+      // Handle error, show error message to the user, etc.
+    }
+  };
+
+  // Fetch reviews when the component mounts
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
   return (
     <div className="lg:max-w-2xl w-full ml-0 p-4 pr-2 lg:ml-[20%]  bg-white shadow-md rounded-md my-8">
+      {/* Your existing content goes here */}
       <div className="flex justify-between items-center mb-4">
-        <div>
-          <div className="text-black flex items-center justify-center ml-2  lg:ml-10 font-bold italic gap-x-4 text-5xl">
-            {totalRating}
-            <svg
-              className="w-6 h-6 lg:w-9 lg:h-9 text-yellow-300 me-1"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 22 20"
-            >
-              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-            </svg>
-          </div>
-        </div>
-        <div className="w-2/3">
-          <div>
-            <div className="flex items-center mb-2">
-              <svg
-                className="w-4 h-4 text-yellow-300 me-1"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-              <svg
-                className="w-4 h-4 text-yellow-300 me-1"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-              <svg
-                className="w-4 h-4 text-yellow-300 me-1"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-              <svg
-                className="w-4 h-4 text-yellow-300 me-1"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-              <svg
-                className="w-4 h-4 text-gray-300 me-1 dark:text-gray-500"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-              <div className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-                4.95
-              </div>
-              <div className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-                out of
-              </div>
-              <div className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-                5
-              </div>
-            </div>
-            <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
-              1,745 global ratings
-            </div>
-            <div className="flex items-center mt-4">
-              <ul
-                href="#"
-                className="text-sm font-medium  dark:text-blue-500 hover:underline"
-              >
-                5
-              </ul>
-              <div className="w-3/4 h-3 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-                <div
-                  className="h-3 bg-yellow-300 rounded"
-                  style={{ width: "70%" }}
-                />
-              </div>
-              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                70%
-              </span>
-            </div>
-            <div className="flex items-center mt-4">
-              <ul
-                href="#"
-                className="text-sm font-medium  dark:text-blue-500 hover:underline"
-              >
-                4
-              </ul>
-              <div className="w-3/4 h-3 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-                <div
-                  className="h-3 bg-yellow-300 rounded"
-                  style={{ width: "17%" }}
-                />
-              </div>
-              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                17%
-              </span>
-            </div>
-            <div className="flex items-center mt-4">
-              <ul
-                href="#"
-                className="text-sm font-medium  dark:text-blue-500 hover:underline"
-              >
-                3
-              </ul>
-              <div className="w-3/4 h-3 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-                <div
-                  className="h-3 bg-yellow-300 rounded"
-                  style={{ width: "8%" }}
-                />
-              </div>
-              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                8%
-              </span>
-            </div>
-            <div className="flex items-center mt-4">
-              <ul
-                href="#"
-                className="text-sm font-medium  dark:text-blue-500 hover:underline"
-              >
-                2
-              </ul>
-              <div className="w-3/4 h-3 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-                <div
-                  className="h-3 bg-yellow-300 rounded"
-                  style={{ width: "4%" }}
-                />
-              </div>
-              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                4%
-              </span>
-            </div>
-            <div className="flex items-center mt-4">
-              <ul
-                href="#"
-                className="text-sm font-medium  dark:text-blue-500 hover:underline"
-              >
-                1
-              </ul>
-              <div className="w-3/4 h-3 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-                <div
-                  className="h-3 bg-yellow-300 rounded"
-                  style={{ width: "1%" }}
-                />
-              </div>
-              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                1%
-              </span>
-            </div>
-          </div>
-        </div>
+        <button className="text-blue-400 font-bold" onClick={openModal}>
+          + Add Review
+        </button>
       </div>
+      {/* Modal for creating a new review */}
+      {isModalOpen && (
+        <CreateRatingModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onSubmit={handleSubmitReview}
+          onReviewChange={handleReviewChange}
+          rating={reviewData.rating}
+          comment={reviewData.comment}
+        />
+      )}
+
+      {/* Display fetched reviews */}
       <div className="mt-8">
         <hr className="border border-gray-300 mb-4" />
         <div className="flex justify-between items-center mx-6">
           <h2 className="text-xl font-bold mb-4 ">
-            All Reviews <span>(3)</span>
+            All Reviews <span>({reviews.length})</span>
           </h2>
-          <button className="text-blue-400 font-bold" onClick={openModal}>
-            + Add Review
-          </button>
         </div>
-        {isModalOpen && <CreateRatingModal onClose={closeModal} />}
-
-        {[1, 2, 3].map((index) => (
+        {/* Map through fetched reviews and display them */}
+        {reviews.map((review, index) => (
           <div key={index} className="border-b ml-10 pb-4 mb-2">
-            <div className="text-lg font-bold">John Doe</div>
+            <div className="text-lg font-bold">{review.author}</div>
             <div className="text-gray-600 flex">
-              <svg
-                className="w-4 h-4 text-yellow-300 me-1"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>{" "}
-              <svg
-                className="w-4 h-4 text-yellow-300 me-1"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>{" "}
-              <svg
-                className="w-4 h-4 text-yellow-300 me-1"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>{" "}
-              <svg
-                className="w-4 h-4 text-yellow-300 me-1"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>{" "}
-              <svg
-                className="w-4 h-4 text-yellow-300 me-1"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>{" "}
+              {/* Display star ratings here if available */}
               <div className="text-gray-600 text-sm">
-                2022-01-28 <span>11:20 AM</span>
+                {review.date} <span>{review.time}</span>
               </div>
             </div>
-            <div className="mt-2">Great product! Loved it.</div>
+            <div className="mt-2">{review.comment}</div>
           </div>
         ))}
       </div>

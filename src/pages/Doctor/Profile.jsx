@@ -4,6 +4,7 @@ import axios from "axios";
 import { MdDelete } from "react-icons/md";
 import Overview from "./Overview";
 import SeeAppointment from "./SeeAppointment";
+import { Link } from "react-router-dom";
 
 const DocProfile = () => {
   const [activeTab, setActiveTab] = useState("overview");

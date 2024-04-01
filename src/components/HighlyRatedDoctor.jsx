@@ -1,9 +1,11 @@
+// HighlyRatedDoctor.js
+
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 const HighlyRatedDoctor = ({ doctor }) => {
-  const { Doctor_Name, Speciality, Rating, Address, Image } = doctor;
+  const { Doctor_ID, Doctor_Name, Speciality, Rating, Address, Image } = doctor;
 
   return (
     <div
@@ -24,8 +26,11 @@ const HighlyRatedDoctor = ({ doctor }) => {
 
       {/* Doctor Information */}
       <div className="flex-1">
+        {/* Doctor ID */}
+        <p className="text-gray-500 mb-2">ID: {Doctor_ID}</p>
+
         {/* Doctor Name */}
-        <Link to="/doctor-details">
+        <Link to={`/doctor-details/${Doctor_ID}`}>
           <h3 className="text-lg font-semibold cursor-pointer">
             {Doctor_Name}
           </h3>
@@ -59,6 +64,7 @@ const HighlyRatedDoctor = ({ doctor }) => {
 // Prop Types
 HighlyRatedDoctor.propTypes = {
   doctor: PropTypes.shape({
+    Doctor_ID: PropTypes.number.isRequired,
     Doctor_Name: PropTypes.string.isRequired,
     Speciality: PropTypes.string.isRequired,
     Rating: PropTypes.number.isRequired,

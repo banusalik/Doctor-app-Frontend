@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout/Layout";
 import Cards from "../components/Cards";
+import { Link } from "react-router-dom";
 
 const FindDoctor = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -15,7 +16,7 @@ const FindDoctor = () => {
         const data = await response.json();
         console.log("Fetched doctor data:", data);
         if (data.status) {
-          setDoctorData(data.doctor); // Update state with fetched doctor data
+          setDoctorData(data.data); // Update state with fetched doctor data
         } else {
           console.error(data.message); // Log error message if status is false
         }
@@ -77,19 +78,21 @@ const FindDoctor = () => {
           </button>
         </div>
         <div className="max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {doctorData &&
-            doctorData.map((doctor, index) => (
-              <Cards
-                key={index} // Use a unique key for each card
-                Image={doctor.Image}
-                Doctor_Name={doctor.Doctor_Name}
-                Speciality={doctor.Speciality}
-                Rating={doctor.Rating}
-                Phone_Number={doctor.Phone_Number ? 1 : 0}
-                Address={doctor.Address}
-                link="/doctor-details"
-              />
-            ))}
+          {doctorData?.map((doctor, index) => {
+            return (
+              <Link to={`/doctor-details/${doctor.Doctor_ID}`} key={index}>
+                <Cards
+                  Doctor_ID={doctor.Doctor_ID}
+                  Image={doctor.Image || "/image"}
+                  Doctor_Name={doctor.Doctor_Name || "/image"}
+                  Speciality={doctor.Speciality}
+                  Rating={doctor.Rating}
+                  Phone_Number={doctor.Phone_Number ? 1 : 0}
+                  Address={doctor.Address}
+                />
+              </Link>
+            );
+          })}
         </div>
       </div>
     </Layout>

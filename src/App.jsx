@@ -31,9 +31,14 @@ function App() {
         <Route path="/doctor/login" element={<DoctorLogin />} exact />
         <Route path="/register" element={<Register />} exact />
         <Route path="/find-doctor" element={<FindDoctor />} exact />
-        <Route path="/doctor-details" element={<DoctorDetails />} exact />
+        {/* <Route path="/doctor-details" element={<DoctorDetails />} exact /> */}
+        <Route path="/doctor-details/:Doctor_ID" element={<DoctorDetails />} />
         <Route path="/tests" element={<Tests />} exact />
-        <Route path="/book-appointment" element={<BookAppointment />} exact />
+        <Route
+          path="/book-appointment/:Doctor_ID"
+          element={<BookAppointment />}
+          exact
+        />
         <Route path="/contact" element={<Contact />} exact />
         <Route path="/about" element={<About />} exact />
         {/* admin routing */}

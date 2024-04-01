@@ -1,10 +1,10 @@
-// CardComponent.jsx
 import React from "react";
 import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { FaArrowRightLong } from "react-icons/fa6";
 
 const Cards = ({
+  Doctor_ID,
   Image,
   Doctor_Name,
   Speciality,
@@ -42,7 +42,7 @@ const Cards = ({
 
       <div className="flex justify-between px-6 py-4">
         <div className="font-normal text-sm mt-1">{Address}</div>
-        <Link to={link}>
+        <Link to={`/doctor-details/${Doctor_ID}`}>
           <span className="inline-block cursor-pointer p-1 border border-black rounded-full hover:bg-btnColor transition-all duration-300 ease-in-out">
             <FaArrowRightLong className="w-4 mt-[1px] h-4 text-black" />
           </span>

@@ -3,11 +3,13 @@ import Layout from "../components/Layout/Layout";
 import login from "../assets/Login.jpg";
 import { BiSolidHide, BiShowAlt } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 
 const DoctorLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
@@ -37,7 +39,12 @@ const DoctorLogin = () => {
         // Handle successful login
         const data = await response.json();
         console.log("Doctor Login successful:", data);
-        // Redirect or do something else after successful login
+
+        // Store the token in localStorage
+        localStorage.setItem("token", data.token);
+
+        // Redirect to doctor's profile page
+        navigate("/doctor/Profile");
       } else {
         // Handle login failure
         console.error("Doctor Login failed");
@@ -117,11 +124,13 @@ const DoctorLogin = () => {
                   )}
                 </div>
               </div>
-              <Link to="/doctor/Profile">
-                <button className="w-full py-3 text-md bg-btnColor mb-3 font-bold text-white rounded-md hover:bg-blue-600">
-                  Login
-                </button>
-              </Link>
+              // Replace the Link component with a button for form submission
+              <button
+                type="submit"
+                className="w-full py-3 text-md bg-btnColor mb-3 font-bold text-white rounded-md hover:bg-blue-600"
+              >
+                Login
+              </button>
               <div className="text-md text-center mb-4">
                 Don't have an Account?
                 <span className=" ml-2 text-darkBlue">

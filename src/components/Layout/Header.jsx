@@ -1,9 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation, NavLink } from "react-router-dom";
 import logo from "../../assets/Logo.svg";
+import userIcon from "../../assets/user-icon.png"; // Import user icon
 
 const Header = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
+  const [userType, setUserType] = useState(""); // State to track user type
+
+  useEffect(() => {
+    // Check if user is logged in and set the user type accordingly
+    const userTypeFromLocalStorage = localStorage.getItem("userType");
+    setIsLoggedIn(!!userTypeFromLocalStorage);
+    setUserType(userTypeFromLocalStorage);
+  }, []);
 
   const handleToggleMenu = () => {
     setMenuOpen((prevMenuState) => !prevMenuState);
@@ -129,9 +139,21 @@ const Header = () => {
           </ul>
         </div>
         <div className="navbar-end">
-          <Link to="/login" className="px-4 py-2 rounded-md bg-btnColor">
-            Login
-          </Link>
+          {isLoggedIn ? ( // Conditional rendering based on login status
+            <Link to={`/${userType}/profile`}>
+              {" "}
+              {/* Redirect to user profile */}
+              <img
+                src={userIcon}
+                alt="User Profile"
+                className="rounded-full h-10 w-10"
+              />
+            </Link>
+          ) : (
+            <Link to="/login" className="px-4 py-2 rounded-md bg-btnColor">
+              Login
+            </Link>
+          )}
         </div>
       </div>
     </>
