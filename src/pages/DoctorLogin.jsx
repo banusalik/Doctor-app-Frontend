@@ -4,11 +4,13 @@ import login from "../assets/Login.jpg";
 import { BiSolidHide, BiShowAlt } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom"; // Import useNavigate hook
+import Cookies from "js-cookie";
 
 const DoctorLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(""); // State variable for error message
   const navigate = useNavigate(); // Initialize useNavigate hook
 
   const handlePasswordChange = (e) => {
@@ -40,14 +42,23 @@ const DoctorLogin = () => {
         const data = await response.json();
         console.log("Doctor Login successful:", data);
 
-        // Store the token in localStorage
-        localStorage.setItem("token", data.token);
+        // Check if Doctor_ID exists in the response
+        if (data.id) {
+          // Store the token in localStorage
+          localStorage.setItem("token", data.token);
 
-        // Redirect to doctor's profile page
-        navigate("/doctor/Profile");
+          // Store Doctor_ID in a cookie with an expiration of 1 day
+          Cookies.set("Doctor_ID", data.id, { expires: 1 });
+
+          // Redirect to doctor's profile page
+          navigate("/doctor/Profile");
+        } else {
+          console.error("Doctor_ID not found in the response");
+        }
       } else {
         // Handle login failure
         console.error("Doctor Login failed");
+        setError("Email or password wrong. Please try again."); // Set error message state
       }
     } catch (error) {
       console.error("Error during Doctor login:", error);
@@ -77,6 +88,8 @@ const DoctorLogin = () => {
                 Login to book your appointments easily
               </h3>
             </div>
+            {error && <div className="text-red-500 mb-4">{error}</div>}{" "}
+            {/* Display error message */}
             <form onSubmit={formSubmit}>
               <div className="mb-4">
                 <label
@@ -124,7 +137,7 @@ const DoctorLogin = () => {
                   )}
                 </div>
               </div>
-              // Replace the Link component with a button for form submission
+              {/* Replace the Link component with a button for form submission */}
               <button
                 type="submit"
                 className="w-full py-3 text-md bg-btnColor mb-3 font-bold text-white rounded-md hover:bg-blue-600"

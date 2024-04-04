@@ -1,28 +1,53 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, NavLink } from "react-router-dom";
 import logo from "../../assets/Logo.svg";
-import userIcon from "../../assets/user-icon.png"; // Import user icon
+import { FaUserCircle } from "react-icons/fa";
 
 const Header = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
-  const [userType, setUserType] = useState(""); // State to track user type
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [patientId, setPatientId] = useState("");
 
   useEffect(() => {
-    // Check if user is logged in and set the user type accordingly
-    const userTypeFromLocalStorage = localStorage.getItem("userType");
-    setIsLoggedIn(!!userTypeFromLocalStorage);
-    setUserType(userTypeFromLocalStorage);
+    // Check if the patient is logged in by checking cookies
+    const patientToken = getCookie("token");
+    const patientIdCookie = getCookie("Patient_ID");
+    if (patientToken && patientIdCookie) {
+      setIsLoggedIn(true);
+      setPatientId(patientIdCookie);
+    }
   }, []);
 
   const handleToggleMenu = () => {
     setMenuOpen((prevMenuState) => !prevMenuState);
   };
 
+  const toggleDropdown = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    // Implement logout functionality, clear cookies, etc.
+    setIsLoggedIn(false);
+    setPatientId("");
+    // Clear cookies
+    document.cookie =
+      "patient_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "patient_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  };
+
   const location = useLocation();
 
   const isActive = (path) => {
     return location.pathname === path;
+  };
+
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
   };
 
   return (
@@ -57,29 +82,29 @@ const Header = () => {
                 isMenuOpen ? "block" : "hidden"
               }`}
             >
-              <li onClick={(e) => handleMenuItemClick(e)} className=" mb-4">
+              <li className=" mb-4">
                 <Link to="/" className="py-4">
                   Home
                 </Link>
               </li>
 
-              <li onClick={(e) => handleMenuItemClick(e)} className="mb-4">
+              <li className="mb-4">
                 <Link to="/tests" className="py-4">
                   Tests
                 </Link>
               </li>
 
-              <li onClick={(e) => handleMenuItemClick(e)} className="mb-4">
+              <li className="mb-4">
                 <Link to="/find-doctor" className="py-4">
                   Find Doctor
                 </Link>
               </li>
-              <li onClick={(e) => handleMenuItemClick(e)} className="mb-4">
+              <li className="mb-4">
                 <Link to="/about" className="py-4">
                   About us
                 </Link>
               </li>
-              <li onClick={(e) => handleMenuItemClick(e)} className="mb-4">
+              <li className="mb-4">
                 <Link to="/contact" className="py-4">
                   Contact
                 </Link>
@@ -139,16 +164,33 @@ const Header = () => {
           </ul>
         </div>
         <div className="navbar-end">
-          {isLoggedIn ? ( // Conditional rendering based on login status
-            <Link to={`/${userType}/profile`}>
-              {" "}
-              {/* Redirect to user profile */}
-              <img
-                src={userIcon}
-                alt="User Profile"
-                className="rounded-full h-10 w-10"
-              />
-            </Link>
+          {isLoggedIn ? (
+            <div className="relative">
+              <button
+                onClick={toggleDropdown}
+                className="text-white p-2 rounded-full focus:outline-none"
+              >
+                <FaUserCircle size={30} style={{ color: "black" }} />
+              </button>
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg">
+                  <button
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
+                    onClick={() => {
+                      window.location.href = `/user/profile/${patientId}`;
+                    }}
+                  >
+                    Profile
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="block px-4 py-2 text-sm text-red-500 hover:bg-gray-100 w-full"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <Link to="/login" className="px-4 py-2 rounded-md bg-btnColor">
               Login

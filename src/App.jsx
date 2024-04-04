@@ -21,6 +21,7 @@ import Contact from "./pages/Contact";
 import About from "./pages/About";
 import Profile from "./pages/User/Profile";
 import DocProfile from "./pages/Doctor/Profile";
+import AddMore from "./components/AddMore";
 
 function App() {
   return (
@@ -54,6 +55,8 @@ function App() {
         <Route path="/user/profile" element={<Profile />} exact />
         {/* Doctor Routing */}
         <Route path="/doctor/profile" element={<DocProfile />} exact />
+        <Route path="/doctor/profile" element={<DocProfile />} exact />
+        <Route path="/add-more" element={<AddMore />} exact />
       </Routes>
     </>
   );

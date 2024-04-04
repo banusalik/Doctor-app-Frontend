@@ -9,6 +9,7 @@ import doctorPlaceholder from "../assets/doctor.jpg";
 const BookAppointment = () => {
   const { Doctor_ID } = useParams();
   const [doctorDetails, setDoctorDetails] = useState(null);
+  const [status, setStatus] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [date, setDate] = useState("");
@@ -51,6 +52,10 @@ const BookAppointment = () => {
     setSelectedTimeSlot(e.target.value);
   };
 
+  const handleStatus = (e) => {
+    setStatus(e.target.value);
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -62,7 +67,7 @@ const BookAppointment = () => {
         date,
         visitTime: selectedTimeSlot,
         patientId: patientId,
-        status: "Unpaid",
+        status,
         doctorId: Doctor_ID,
         time_slot_id: 1, // Set status to "Unpaid" by default
       };
@@ -90,9 +95,10 @@ const BookAppointment = () => {
       // Handle error scenario
     }
   };
+
   const config = {
     // replace this key with yours
-    publicKey: "test_public_key_dc74e0fd57cb46cd93832aee0a390234",
+    publicKey: "test_public_key_db20ce0cdb3c4201ab57afc7ad855132",
     productIdentity: "1234567890",
     productName: "Drogon",
     productUrl: "http://gameofthrones.com/buy/Dragons",
@@ -100,6 +106,8 @@ const BookAppointment = () => {
       onSuccess(payload) {
         // hit merchant api for initiating verfication
         console.log(payload);
+        appointmentData.handleStatus("Paid");
+        handleFormSubmit;
       },
       // onError handler is optional
       onError(error) {
@@ -129,14 +137,13 @@ const BookAppointment = () => {
   return (
     <Layout>
       <div className="bg-gray-100 min-h-screen flex items-center justify-center">
-        <div className="lg:max-w-[70%] p-8 gap-x-4 rounded-lg shadow-md flex flex-col md:flex-row">
-          {/* Left Side (Doctor Details) */}
+        <div className="lg:w-[55%] p-6 gap-x-2 rounded-lg shadow-md flex flex-col md:flex-row">
           {/* Left Side (Doctor Details) */}
           <div className="md:w-1/2 mb-4 md:mb-0">
             <img
               src={
                 doctorDetails && doctorDetails.Image
-                  ? doctorDetails.Image
+                  ? `http://localhost:8081/image/${doctorDetails.Image}`
                   : doctor
               }
               alt="Doctor"
@@ -152,13 +159,13 @@ const BookAppointment = () => {
           </div>
 
           {/* Right Side (Form) */}
-          <div className="md:w-1/2 md:pl-8 bg-gray-300 rounded-lg">
+          <div className="md:w-1/2 md:p-8 bg-gray-300 rounded-lg">
             <h2 className="text-center font-bold mb-12 mt-8 text-2xl">
               Book Appointment
             </h2>
             <form
               onSubmit={handleFormSubmit}
-              className="flex flex-col w-[80%] mx-auto bg-white rounded-lg p-4 pb-0"
+              className="flex flex-col w-[100%] mx-auto bg-white rounded-lg p-4 pb-0"
             >
               {/* Name Field */}
               <label className="text-gray-700 mb-2" htmlFor="name">

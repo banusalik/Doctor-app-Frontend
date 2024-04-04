@@ -1,14 +1,14 @@
-import React from 'react';
-import Layout from '../components/Layout/Layout';
-import KhaltiCheckout from 'khalti-checkout-web';
+import React from "react";
+import Layout from "../components/Layout/Layout";
+import KhaltiCheckout from "khalti-checkout-web";
 
 const Payment = () => {
   const config = {
     // replace this key with yours
-    publicKey: 'test_public_key_dc74e0fd57cb46cd93832aee0a390234',
-    productIdentity: '1234567890',
-    productName: 'Drogon',
-    productUrl: 'http://gameofthrones.com/buy/Dragons',
+    publicKey: "test_public_key_dc74e0fd57cb46cd93832aee0a390234",
+    productIdentity: "1234567890",
+    productName: "Drogon",
+    productUrl: "http://gameofthrones.com/buy/Dragons",
     eventHandler: {
       onSuccess(payload) {
         // hit merchant api for initiating verfication
@@ -20,15 +20,15 @@ const Payment = () => {
         console.log(error);
       },
       onClose() {
-        console.log('widget is closing');
+        console.log("widget is closing");
       },
     },
     paymentPreference: [
-      'KHALTI',
-      'EBANKING',
-      'MOBILE_BANKING',
-      'CONNECT_IPS',
-      'SCT',
+      "KHALTI",
+      "EBANKING",
+      "MOBILE_BANKING",
+      "CONNECT_IPS",
+      "SCT",
     ],
   };
 

@@ -17,7 +17,7 @@ const HighlyRatedDoctor = ({ doctor }) => {
         {/* You can use an actual image or placeholder here */}
         {Image && (
           <img
-            src={Image}
+            src={"http://localhost:8081/image/" + Image}
             alt={Doctor_Name}
             className="w-full h-full rounded-full object-cover"
           />

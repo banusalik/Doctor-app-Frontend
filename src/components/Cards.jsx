@@ -17,7 +17,7 @@ const Cards = ({
     <div className="w-4/6 md:w-5/6 mx-auto overflow-hidden rounded-md shadow-lg">
       <div className="flex justify-center items-center">
         <img
-          src={Image}
+          src={"http://localhost:8081/image/" + Image}
           alt={`${Doctor_Name} img`}
           className="w-full h-60 md:h-auto rounded-md mb-4"
         />

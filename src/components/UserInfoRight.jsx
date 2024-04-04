@@ -1,20 +1,20 @@
 // RightContainer.jsx
+import React, { useState } from "react";
+import Cards from "./Cards";
+import doctor from "../assets/doctor.jpg";
+import { Link } from "react-router-dom";
+import { FaStar } from "react-icons/fa";
 
-import React, { useState } from 'react';
-import Cards from './Cards';
-import doctor from '../assets/doctor.jpg';
-import { Link } from 'react-router-dom';
-import { FaStar } from 'react-icons/fa';
 const UserInfoRight = ({ activeTab, onTabChange }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    address: '',
-    phoneNumber: '',
-    bloodGroup: 'A+',
-    birthDate: '',
-    gender: 'male',
+    name: "",
+    email: "",
+    password: "",
+    address: "",
+    phoneNumber: "",
+    bloodGroup: "A+",
+    birthDate: "",
+    gender: "male",
     image: null,
   });
 
@@ -31,7 +31,7 @@ const UserInfoRight = ({ activeTab, onTabChange }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your update profile logic here
-    console.log('Form Data:', formData);
+    console.log("Form Data:", formData);
     // Reset the form or navigate to another page after submission
   };
 
@@ -41,26 +41,26 @@ const UserInfoRight = ({ activeTab, onTabChange }) => {
       <div className="mb-6 mt-6 lg:mt-0 flex flex-col lg:block gap-y-4 items-center lg:gap-y-0 text-center lg:text-left">
         <button
           className={`px-4 py-2 mr-2 rounded-lg ${
-            activeTab === 'appointments'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-300'
+            activeTab === "appointments"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-300"
           }`}
-          onClick={() => onTabChange('appointments')}
+          onClick={() => onTabChange("appointments")}
         >
           My Appointments
         </button>
         <button
           className={`px-4 py-2 rounded-lg ${
-            activeTab === 'profile' ? 'bg-blue-500 text-white' : 'bg-gray-300'
+            activeTab === "profile" ? "bg-blue-500 text-white" : "bg-gray-300"
           }`}
-          onClick={() => onTabChange('profile')}
+          onClick={() => onTabChange("profile")}
         >
           My Profile
         </button>
       </div>
 
       {/* Content based on the active tab */}
-      {activeTab === 'appointments' && (
+      {activeTab === "appointments" && (
         <>
           <h1 className="text-2xl font-bold mb-4">My Bookings</h1>
           <div className="max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -253,7 +253,7 @@ const UserInfoRight = ({ activeTab, onTabChange }) => {
         </>
       )}
 
-      {activeTab === 'profile' && (
+      {activeTab === "profile" && (
         <div>
           <form
             onSubmit={handleSubmit}

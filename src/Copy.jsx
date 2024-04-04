@@ -1,12 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../components/Layout/Layout";
 import axios from "axios";
 import { MdDelete } from "react-icons/md";
 import Overview from "./Overview";
 import SeeAppointment from "./SeeAppointment";
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+import AddMore from "../../components/AddMore";
 
 const DocProfile = () => {
+  const { Doctor_ID } = useParams();
   const [activeTab, setActiveTab] = useState("overview");
+  const [showAddMore, setShowAddMore] = useState(false); // State variable to toggle AddMore component
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
 
   // State variables
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -17,43 +24,52 @@ const DocProfile = () => {
   const [gender, setGender] = useState("");
   const [ticketPrice, setTicketPrice] = useState("");
   const [specialization_id, setSpecialization] = useState("");
-  const [newTimeSlots, setNewTimeSlots] = useState([
-    {
-      Start_Time: "",
-      End_Time: "",
-      Day: "",
-      Doctor_ID: 2,
-    },
-  ]);
-  // const [newQualifications, setNewQualifications] = useState([]);
-  const [newQualifications, setNewQualifications] = useState([
-    {
-      Degree: "",
-      University: "",
-      Doctor_ID: 2,
-    },
-  ]);
-  const [newExperiences, setNewExperiences] = useState([
-    {
-      Start_Date: "",
-      End_Date: "",
-      Position: "",
-      Hospital: "",
-      Doctor_ID: 2,
-    },
-  ]);
-  const [image, setimage] = useState(null);
+  const [image, setImage] = useState(null);
 
-  // Days of the week array
-  const daysOfWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
+  useEffect(() => {
+    const fetchDoctorDetails = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8081/doctor/${Doctor_ID}`
+        );
+        if (response.data) {
+          const {
+            phoneNumber,
+            email,
+            doctorName,
+            bio,
+            about,
+            gender,
+            ticketPrice,
+            specialization_id,
+            imageURL,
+          } = response.data;
+          setPhoneNumber(phoneNumber);
+          setEmail(email);
+          setDoctorName(doctorName);
+          setBio(bio);
+          setAbout(about);
+          setGender(gender);
+          setTicketPrice(ticketPrice);
+          setSpecialization(specialization_id);
+          if (imageURL) {
+            setImage(imageURL);
+          }
+        }
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDoctorDetails();
+
+    // Cleanup function
+    return () => {
+      // Cleanup tasks (if any)
+    };
+  }, [Doctor_ID]);
 
   // Function to handle changes in the "About" textarea
   const handleAboutChange = (e) => {
@@ -65,53 +81,13 @@ const DocProfile = () => {
     setActiveTab(tab);
   };
 
-  const addQualification = () => {
-    setNewQualifications([
-      ...newQualifications,
-      { Degree: "", University: "", Doctor_ID: 2 },
-    ]);
-  };
-
-  // Function to remove a qualification
-  const removeQualification = (index) => {
-    const updatedQualifications = [...newQualifications];
-    updatedQualifications.splice(index, 1);
-    setNewQualifications(updatedQualifications);
-  };
-  // Function to add a new experience
-  const addExperience = () => {
-    setNewExperiences([
-      ...newExperiences,
-      { startDate: "", endDate: "", position: "", hospital: "" },
-    ]);
-  };
-
-  // Function to remove an experience
-  const removeExperience = (index) => {
-    const updatedExperiences = [...newExperiences];
-    updatedExperiences.splice(index, 1);
-    setNewExperiences(updatedExperiences);
-  };
-
-  // Function to add a new time slot
-  const addTimeSlot = () => {
-    setNewTimeSlots([...newTimeSlots, { day: "", startTime: "", endTime: "" }]);
-  };
-
-  // Function to remove a time slot
-  const removeTimeSlot = (index) => {
-    const updatedTimeSlots = [...newTimeSlots];
-    updatedTimeSlots.splice(index, 1);
-    setNewTimeSlots(updatedTimeSlots);
-  };
-
   // Function to handle image upload
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
 
     reader.onloadend = () => {
-      setimage(file);
+      setImage(file);
     };
 
     if (file) {
@@ -123,8 +99,8 @@ const DocProfile = () => {
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     try {
-      const doctorId = 2; // Use the doctor's ID here
       const formData = new FormData();
+      formData.append("image", image);
       formData.append("phoneNumber", phoneNumber);
       formData.append("email", email);
       formData.append("doctorName", doctorName);
@@ -133,49 +109,9 @@ const DocProfile = () => {
       formData.append("gender", gender);
       formData.append("ticketPrice", ticketPrice);
       formData.append("specialization_id", specialization_id);
-      newTimeSlots.forEach((slot, index) => {
-        formData.append(`newTimeSlots[${index}][day]`, slot.day);
-        formData.append(`newTimeSlots[${index}][startTime]`, slot.startTime);
-        formData.append(`newTimeSlots[${index}][endTime]`, slot.endTime);
-      });
-      newQualifications.forEach((qualification, index) => {
-        formData.append(
-          `newQualifications[${index}][Degree]`,
-          qualification.Degree
-        );
-        formData.append(
-          `newQualifications[${index}][University]`,
-          qualification.University
-        );
-        formData.append(
-          `newQualifications[${index}][Doctor_ID]`,
-          qualification.Doctor_ID
-        );
-      });
-      newExperiences.forEach((experience, index) => {
-        formData.append(
-          `newExperiences[${index}][startDate]`,
-          experience.startDate
-        );
-        formData.append(
-          `newExperiences[${index}][endDate]`,
-          experience.endDate
-        );
-        formData.append(
-          `newExperiences[${index}][position]`,
-          experience.position
-        );
-        formData.append(
-          `newExperiences[${index}][hospital]`,
-          experience.hospital
-        );
-      });
-      if (image) {
-        formData.append("image", image);
-      }
 
       const response = await axios.post(
-        `http://localhost:8081/doctor/update-profile/${doctorId}`,
+        `http://localhost:8081/doctor/update-profile/1`,
         formData,
         {
           headers: {
@@ -190,6 +126,19 @@ const DocProfile = () => {
       // Handle error: show an error message to the user
     }
   };
+
+  // Function to toggle AddMore component visibility
+  const handleShowAddMore = () => {
+    setShowAddMore(!showAddMore);
+  };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
 
   return (
     <Layout>
@@ -236,7 +185,9 @@ const DocProfile = () => {
         {/* Right Section with Container */}
         <div className="w-full lg:w-3/6 p-4">
           {/* Content based on activeTab */}
-          {activeTab === "overview" && <Overview />}
+          {activeTab === "overview" && (
+            <Overview doctorDetails={(doctorName, email, phoneNumber)} />
+          )}
           {activeTab === "appointment" && <SeeAppointment />}
 
           {activeTab === "profile" && (
@@ -324,8 +275,12 @@ const DocProfile = () => {
                             required
                           >
                             <option value="">Select Specialization</option>
-                            <option value="1">Cardiologist</option>
-                            <option value="2">Dermatologist</option>
+                            <option value="1">Cardiology</option>
+                            <option value="2">Dermatology</option>
+                            <option value="3">Dental</option>
+                            <option value="4">Dermatology</option>
+                            <option value="5">Anesthesiology</option>
+                            <option value="6">General Surgery</option>
                             {/* Add more options as needed */}
                           </select>
                         </div>
@@ -343,233 +298,6 @@ const DocProfile = () => {
                       </div>
                     </div>
                   </div>
-                </div>
-
-                {/* Qualifications */}
-                <div className="mb-4">
-                  <h2 className="text-xl font-bold mb-2">Qualifications</h2>
-                  {newQualifications.map((qualification, index) => (
-                    <div key={index} className="grid grid-cols-3 gap-4 mb-2">
-                      <div>
-                        <label htmlFor={`Degree-${index}`}>Degree</label>
-                        <input
-                          type="text"
-                          id={`Degree-${index}`}
-                          value={qualification.Degree}
-                          onChange={(e) => {
-                            const updatedQualifications = [
-                              ...newQualifications,
-                            ];
-                            updatedQualifications[index].Degree =
-                              e.target.value;
-                            setNewQualifications(updatedQualifications);
-                          }}
-                          className="w-full p-2 border  rounded-md"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor={`University-${index}`}>
-                          University
-                        </label>
-                        <input
-                          type="text"
-                          id={`University-${index}`}
-                          value={qualification.University}
-                          onChange={(e) => {
-                            const updatedQualifications = [
-                              ...newQualifications,
-                            ];
-                            updatedQualifications[index].University =
-                              e.target.value;
-                            setNewQualifications(updatedQualifications);
-                          }}
-                          className=" p-2 border  rounded-md"
-                          required
-                        />
-                      </div>
-                      <div className="flex ">
-                        <button
-                          type="button"
-                          onClick={() => removeQualification(index)}
-                          className=" mt-5"
-                        >
-                          <MdDelete className="w-6 h-6 text-red-500" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                  <button
-                    onClick={addQualification}
-                    className="bg-blue-500 text-white px-4 py-2"
-                  >
-                    Add Qualification
-                  </button>
-                </div>
-
-                {/* Experiences */}
-                <div className="mb-4">
-                  <h2 className="text-xl font-bold mb-2">Experiences</h2>
-                  {newExperiences.map((experience, index) => (
-                    <div key={index} className="grid grid-cols-2 gap-4 mb-2">
-                      <div>
-                        <label htmlFor={`Start_Date-${index}`}>
-                          Start Date
-                        </label>
-                        <input
-                          type="date"
-                          id={`Start_Date-${index}`}
-                          value={experience.Start_Date}
-                          onChange={(e) => {
-                            const updatedExperiences = [...newExperiences];
-                            updatedExperiences[index].Start_Date =
-                              e.target.value;
-                            setNewExperiences(updatedExperiences);
-                          }}
-                          className="w-full p-2 border  rounded-md"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor={`End_Date-${index}`}>End Date</label>
-                        <input
-                          type="date"
-                          id={`End_Date-${index}`}
-                          value={experience.End_Date}
-                          onChange={(e) => {
-                            const updatedExperiences = [...newExperiences];
-                            updatedExperiences[index].End_Date = e.target.value;
-                            setNewExperiences(updatedExperiences);
-                          }}
-                          className="w-full p-2 border rounded-md"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor={`Position-${index}`}>Position</label>
-                        <input
-                          type="text"
-                          id={`Position-${index}`}
-                          value={experience.Position}
-                          onChange={(e) => {
-                            const updatedExperiences = [...newExperiences];
-                            updatedExperiences[index].Position = e.target.value;
-                            setNewExperiences(updatedExperiences);
-                          }}
-                          className="w-full p-2 border rounded-md"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor={`Hospital-${index}`}>Hospital</label>
-                        <input
-                          type="text"
-                          id={`Hospital-${index}`}
-                          value={experience.Hospital}
-                          onChange={(e) => {
-                            const updatedExperiences = [...newExperiences];
-                            updatedExperiences[index].Hospital = e.target.value;
-                            setNewExperiences(updatedExperiences);
-                          }}
-                          className="w-full p-2 border rounded-md"
-                          required
-                        />
-                      </div>
-                      <div className="col-span-1">
-                        <button
-                          type="button"
-                          onClick={() => removeExperience(index)}
-                          className=""
-                        >
-                          <MdDelete className="w-6 h-6 text-red-500" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                  <button
-                    onClick={addExperience}
-                    className="bg-blue-500 text-white px-4 py-2"
-                  >
-                    Add Experience
-                  </button>
-                </div>
-
-                {/* Time Slots */}
-                <div className="mb-4">
-                  <h2 className="text-xl font-bold mb-2">Time Slots</h2>
-                  {newTimeSlots.map((slot, index) => (
-                    <div key={index} className="grid grid-cols-3 gap-4 mb-2">
-                      <div>
-                        <label htmlFor={`Day-${index}`}>Day</label>
-                        <select
-                          id={`Day-${index}`}
-                          value={slot.Day}
-                          onChange={(e) => {
-                            const updatedTimeSlots = [...newTimeSlots];
-                            updatedTimeSlots[index].Day = e.target.value;
-                            setNewTimeSlots(updatedTimeSlots);
-                          }}
-                          className="w-full p-2 border rounded-md focus:outline-none border-black focus:border-blue-500"
-                        >
-                          <option value="" disabled>
-                            Select Day
-                          </option>
-                          {daysOfWeek.map((Day) => (
-                            <option key={Day} value={Day}>
-                              {Day}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label htmlFor={`Start_Time-${index}`}>
-                          Start Time
-                        </label>
-                        <input
-                          type="time"
-                          id={`Start_Time-${index}`}
-                          value={slot.Start_Time}
-                          onChange={(e) => {
-                            const updatedTimeSlots = [...newTimeSlots];
-                            updatedTimeSlots[index].Start_Time = e.target.value;
-                            setNewTimeSlots(updatedTimeSlots);
-                          }}
-                          className="w-full p-2 border rounded-md"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor={`End_Time-${index}`}>End Time</label>
-                        <input
-                          type="time"
-                          id={`End_Time-${index}`}
-                          value={slot.End_Time}
-                          onChange={(e) => {
-                            const updatedTimeSlots = [...newTimeSlots];
-                            updatedTimeSlots[index].End_Time = e.target.value;
-                            setNewTimeSlots(updatedTimeSlots);
-                          }}
-                          className="w-full p-2 border rounded-md"
-                          required
-                        />
-                      </div>
-                      <div className="col-span-1">
-                        <button
-                          type="button"
-                          onClick={() => removeTimeSlot(index)}
-                          className=""
-                        >
-                          <MdDelete className="w-6 h-6 text-red-500" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                  <button
-                    onClick={addTimeSlot}
-                    className="bg-blue-500 text-white px-4 py-2"
-                  >
-                    Add Time Slot
-                  </button>
                 </div>
 
                 {/* About and Image */}
@@ -598,12 +326,14 @@ const DocProfile = () => {
                       />
                     </div>
                     <div>
-                      {image && (
+                      {image ? (
                         <img
                           src={image}
                           alt="Uploaded"
                           className="w-40 h-40 object-cover"
                         />
+                      ) : (
+                        <span>No image available</span>
                       )}
                     </div>
                   </div>
@@ -617,6 +347,16 @@ const DocProfile = () => {
                   Update Profile
                 </button>
               </form>
+              {/* Add More Button */}
+              <button
+                className="bg-blue-500 mb-10 mt-10 text-white px-4 py-2 rounded-md"
+                onClick={handleShowAddMore} // Toggle AddMore component visibility
+              >
+                {showAddMore ? "Hide More" : "Add More"}
+              </button>
+
+              {/* Conditionally render AddMore component */}
+              {showAddMore && <AddMore />}
             </div>
           )}
         </div>

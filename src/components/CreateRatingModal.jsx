@@ -1,11 +1,14 @@
-// Assuming you're using React
-
 import React, { useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
+import Cookies from "js-cookie";
+import { useParams } from "react-router-dom"; // Import useParams
 
 const CreateRatingModal = ({ onClose }) => {
   const [rating, setRating] = useState(0); // Initial rating state
   const [comment, setComment] = useState(""); // State for storing comment
+  const { Doctor_ID } = useParams(); // Ensure Doctor_ID is correctly obtained from params
+
+  const Patient_ID = Cookies.get("Patient_ID"); // Correct the cookie name
 
   const handleStarClick = (star) => {
     setRating(star);
@@ -19,10 +22,10 @@ const CreateRatingModal = ({ onClose }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          patientId: 1, // Replace with the actual patient ID
+          patientId: Patient_ID, // Use the actual patient ID variable
           rating: rating,
           comment: comment,
-          doctorId: 2, // Replace with the actual doctor ID
+          doctorId: Doctor_ID, // Use the actual doctor ID variable
         }),
       });
       const data = await response.json();

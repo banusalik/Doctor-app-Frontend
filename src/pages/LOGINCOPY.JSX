@@ -28,36 +28,51 @@ const Login = () => {
   const formSubmit = async (e) => {
     e.preventDefault();
 
+    // Define admin credentials
+    const adminEmail = "admin@example.com";
+    const adminPassword = "admin123";
+
     try {
-      const response = await fetch("http://localhost:8081/patients/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Patient Login successful:", data);
-
-        // Store token and user ID in cookie
-        Cookies.set("token", data.token, { expires: 1 }); // Expires in 1 day
-        Cookies.set("Patient_ID", data.data.Patient_ID, { expires: 1 }); // Expires in 1 day
-
-        // Update isLoggedIn state
-        setIsLoggedIn(true);
-        setPatientId(data.data.Patient_ID);
-
-        // Redirect to home page
-        window.location.href = "/";
+      if (email === adminEmail && password === adminPassword) {
+        localStorage.setItem("isAdmin", "true");
+        Login({ userId: "admin", token: "admin-token" });
+        navigate("/admin/dashboard");
       } else {
-        console.error("Patient Login failed");
-        const errorMessage = await response.text();
-        setError("Email or password wrong. Please try again."); // Set error message state
+        try {
+          const response = await fetch("http://localhost:8081/patients/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log("Patient Login successful:", data);
+
+            // Store token and user ID in cookie
+            Cookies.set("token", data.token, { expires: 1 }); // Expires in 1 day
+            Cookies.set("Patient_ID", data.data.Patient_ID, { expires: 1 }); // Expires in 1 day
+
+            // Update isLoggedIn state
+            setIsLoggedIn(true);
+            setPatientId(data.data.Patient_ID);
+
+            // Redirect to home page
+            window.location.href = "/";
+          } else {
+            console.error("Patient Login failed");
+            const errorMessage = await response.text();
+            setError("Email or password wrong. Please try again."); // Set error message state
+          }
+        } catch (error) {
+          console.error("Error during Patient login:", error);
+        }
       }
     } catch (error) {
-      console.error("Error during Patient login:", error);
+      // Add catch block here
+      console.error("Error:", error);
     }
   };
 

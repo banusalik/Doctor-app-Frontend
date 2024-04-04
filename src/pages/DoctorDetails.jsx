@@ -41,7 +41,7 @@ const DoctorDetails = () => {
           <div className="flex flex-col lg:flex-row">
             <figure className="w-full lg:w-1/2">
               <img
-                src={doctorDetails.Image || doctorPlaceholder}
+                src={`http://localhost:8081/image/${doctorDetails.Image}`}
                 alt="Doctor"
               />
             </figure>
@@ -74,7 +74,7 @@ const DoctorDetails = () => {
       ) : (
         <p>Loading...</p>
       )}
-      {rating && <Rating rating={rating} />}
+      <Rating doctorId={Doctor_ID} />
     </Layout>
   );
 };
