@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../../components/Layout/Layout";
 import axios from "axios";
-import { MdDelete } from "react-icons/md";
-//import Overview from "./Overview";
+import Overview from "./Overview";
 import SeeAppointment from "./SeeAppointment";
-import { Link } from "react-router-dom";
-//import AddMore from "../../components/AddMore";
 import Cookies from "js-cookie";
+import Experiences from "./Experiences";
+import TimeSlotsComponent from "./TimeSlotsComponent";
+import Qualifications from "./Qualifications";
 
 const DocProfile = () => {
-  // Uncomment the line below to declare and initialize activeTab state variable
-  const [activeTab, setActiveTab] = useState();
-
-  //const [activeTab, setActiveTab] = useState("overview");
-  const [showAddMore, setShowAddMore] = useState(false); // State variable to toggle AddMore component
+  const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -68,11 +64,7 @@ const DocProfile = () => {
     };
 
     fetchDoctorDetails();
-
-    // Cleanup function
-    return () => {
-      // Cleanup tasks (if any)
-    };
+    return () => {};
   }, [doctorId]);
 
   // Function to handle changes in the "About" textarea
@@ -80,7 +72,6 @@ const DocProfile = () => {
     setAbout(e.target.value);
   };
 
-  // Function to handle tab click
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
@@ -99,7 +90,6 @@ const DocProfile = () => {
     }
   };
 
-  // Function to handle profile update
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     try {
@@ -112,10 +102,16 @@ const DocProfile = () => {
       formData.append("about", about);
       formData.append("gender", gender);
       formData.append("ticketPrice", ticketPrice);
-      formData.append("specialization_id", specialization_id);
+      formData.append("specializationAt", specialization_id);
 
       const response = await axios.post(
-        `http://localhost:8081/doctor/update-profile/2`
+        `http://localhost:8081/doctor/update-profile/${doctorId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
       console.log(response.data);
     } catch (error) {
@@ -123,16 +119,18 @@ const DocProfile = () => {
     }
   };
 
-  // Function to toggle AddMore component visibility
-  // const handleShowAddMore = () => {
-  //   setShowAddMore(!showAddMore);
-  // };
+  const handleLogout = () => {
+    Cookies.remove("Doctor_ID");
+    localStorage.removeItem("token");
+    // Redirect to the logout page or any other desired action
+    window.location.href = "/";
+  };
 
   return (
     <Layout>
-      <div className="flex flex-col md:flex-row mx-2 lg:mx-11 mt-20 p-4 gap-x-10">
-        <div className="w-3/4 mb-10 lg:mb-0 mx-auto lg:mx-0 bg-white lg:w-2/6 h-1/2 p-4 flex-col flex items-center rounded-2xl mt-4 justify-center ">
-          {/* <button
+      <div className="flex flex-col md:flex-row mx-2 lg:mx-11 mt-10 p-4 gap-x-10">
+        <div className="w-3/4 mb-10 lg:mb-0 mx-auto lg:mx-0 bg-white lg:w-2/6 h-1/2 p-4 flex-col flex items-center rounded-2xl mt-8 justify-center ">
+          <button
             className={`w-40 p-2 mb-2 ${
               activeTab === "overview"
                 ? "bg-[#D5D5D5] text-black rounded-lg"
@@ -140,8 +138,8 @@ const DocProfile = () => {
             }`}
             onClick={() => handleTabClick("overview")}
           >
-            Overview
-          </button> */}
+            Doctor Profile
+          </button>
           <button
             className={`w-40 p-2 mb-2 ${
               activeTab === "appointment"
@@ -153,31 +151,62 @@ const DocProfile = () => {
             Appointment
           </button>
           <button
-            className={`w-40 p-2 mb-10 ${
+            className={`w-40 p-2 mb-2 ${
               activeTab === "profile"
                 ? "bg-[#D5D5D5] text-black rounded-lg"
                 : ""
             }`}
             onClick={() => handleTabClick("profile")}
           >
-            Profile
+            Update Profile
           </button>
-          <button className="py-2 mb-2 px-6 bg-black text-white rounded-md">
+          <button
+            className={`w-40 p-2 mb-2 ${
+              activeTab === "timeslots"
+                ? "bg-[#D5D5D5] text-black rounded-lg"
+                : ""
+            }`}
+            onClick={() => handleTabClick("timeslots")}
+          >
+            TimeSlots
+          </button>
+          <button
+            className={`w-40 p-2 mb-2 ${
+              activeTab === "experiences"
+                ? "bg-[#D5D5D5] text-black rounded-lg"
+                : ""
+            }`}
+            onClick={() => handleTabClick("experiences")}
+          >
+            Experiences
+          </button>
+          <button
+            className={`w-40 p-2 mb-10 ${
+              activeTab === "qualifications"
+                ? "bg-[#D5D5D5] text-black rounded-lg"
+                : ""
+            }`}
+            onClick={() => handleTabClick("qualifications")}
+          >
+            Qualifications
+          </button>
+          <button
+            className="py-2 mb-2 px-6 bg-black text-white rounded-md"
+            onClick={handleLogout}
+          >
             Logout
-          </button>
-          <button className="py-2  px-6 bg-red-600 text-white rounded-md">
-            Delete
           </button>
         </div>
 
         {/* Right Section with Container */}
-        <div className="w-full lg:w-3/6 p-4">
-          {/* Content based on activeTab
+        <div className="w-full lg:w-3/6 mt-4 p-4">
           {activeTab === "overview" && (
             <Overview doctorDetails={(doctorName, email, phoneNumber)} />
-          )} */}
+          )}
           {activeTab === "appointment" && <SeeAppointment />}
-
+          {activeTab === "timeslots" && <TimeSlotsComponent />}
+          {activeTab === "experiences" && <Experiences />}
+          {activeTab === "qualifications" && <Qualifications />}
           {activeTab === "profile" && (
             <div className="bg-white rounded-2xl pt-4 px-5">
               <form
@@ -266,7 +295,7 @@ const DocProfile = () => {
                             <option value="1">Cardiology</option>
                             <option value="2">Dermatology</option>
                             <option value="3">Dental</option>
-                            <option value="4">Dermatology</option>
+                            <option value="4">Neurology</option>
                             <option value="5">Anesthesiology</option>
                             <option value="6">General Surgery</option>
                             {/* Add more options as needed */}
@@ -316,7 +345,7 @@ const DocProfile = () => {
                     <div>
                       {image && (
                         <img
-                          src={image}
+                          src={`http://localhost:8081/image/+ ${DocProfile.Image}`}
                           alt="Uploaded"
                           className="w-40 h-40 object-cover"
                         />
@@ -333,16 +362,6 @@ const DocProfile = () => {
                   Update Profile
                 </button>
               </form>
-              {/* Add More Button */}
-              {/* <button
-                className="bg-blue-500 mb-10 mt-10 text-white px-4 py-2 rounded-md"
-                onClick={handleShowAddMore} // Toggle AddMore component visibility
-              >
-                {showAddMore ? "Hide More" : "Add More"}
-              </button> */}
-
-              {/* Conditionally render AddMore component */}
-              {/* {showAddMore && <AddMore />} */}
             </div>
           )}
         </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, NavLink } from "react-router-dom";
 import logo from "../../assets/Logo.svg";
 import { FaUserCircle } from "react-icons/fa";
+import Cookies from "js-cookie";
 
 const Header = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -28,14 +29,9 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    // Implement logout functionality, clear cookies, etc.
-    setIsLoggedIn(false);
-    setPatientId("");
-    // Clear cookies
-    document.cookie =
-      "patient_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie =
-      "patient_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    Cookies.remove("Patient_ID");
+    Cookies.remove("token");
+    window.location.href = "/";
   };
 
   const location = useLocation();
@@ -177,14 +173,20 @@ const Header = () => {
                   <button
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
                     onClick={() => {
-                      window.location.href = `/user/profile/${patientId}`;
+                      const patientId = Cookies.get("Patient_ID");
+                      if (patientId) {
+                        window.location.href = `/user/profile/${patientId}`;
+                      } else {
+                        console.error("Patient ID not found in cookies");
+                      }
                     }}
                   >
                     Profile
                   </button>
+
                   <button
-                    onClick={handleLogout}
                     className="block px-4 py-2 text-sm text-red-500 hover:bg-gray-100 w-full"
+                    onClick={handleLogout}
                   >
                     Logout
                   </button>

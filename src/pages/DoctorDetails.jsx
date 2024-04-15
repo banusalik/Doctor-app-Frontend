@@ -60,7 +60,9 @@ const DoctorDetails = () => {
               </h3>
               <h3 className="card-title text-base font-bold mb-6">
                 Specialist:{" "}
-                <span className="font-normal">{doctorDetails.Specialist}</span>
+                <span className="font-normal">
+                  {doctorDetails.Specialization_at}
+                </span>
               </h3>
               <p className="mb-4">{doctorDetails.Bio}</p>
               <div className="card-actions justify-end">

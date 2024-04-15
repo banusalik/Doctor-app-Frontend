@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { IoMdArrowDropright } from 'react-icons/io';
-import { FaHome } from 'react-icons/fa';
-import { NavLink, useLocation } from 'react-router-dom';
-import { CgCalendarDates } from 'react-icons/cg';
-import { MdLocalHospital } from 'react-icons/md';
-import { FaUser } from 'react-icons/fa';
-import { AiOutlineTransaction } from 'react-icons/ai';
+import React, { useEffect, useState } from "react";
+import { IoMdArrowDropright } from "react-icons/io";
+import { FaHome } from "react-icons/fa";
+import { NavLink, useLocation } from "react-router-dom";
+import { CgCalendarDates } from "react-icons/cg";
+import { MdLocalHospital } from "react-icons/md";
+import { FaUser } from "react-icons/fa";
+import { AiOutlineTransaction } from "react-icons/ai";
 
 const Sidebar = () => {
   const location = useLocation();
-  const [activeItem, setActiveItem] = useState('');
+  const [activeItem, setActiveItem] = useState("");
 
   // Update the active item whenever the location changes
   useEffect(() => {
@@ -27,12 +27,12 @@ const Sidebar = () => {
             <NavLink
               to="/admin/dashboard"
               className={`flex items-center ${
-                activeItem === '/admin/dashboard'
-                  ? 'text-black bg-white rounded-tl-xl rounded-bl-xl py-2 w-full'
-                  : ''
+                activeItem === "/admin/dashboard"
+                  ? "text-black bg-white rounded-tl-xl rounded-bl-xl py-2 w-full"
+                  : ""
               }`}
             >
-              {activeItem === '/admin/dashboard' ? (
+              {activeItem === "/admin/dashboard" ? (
                 <span className="ml-2 mr-2 bg-black inline-block cursor-pointer border border-black rounded-full w-8 h-8 flex content-center items-center hover:bg-btnColor transition-all duration-300 ease-in-out">
                   <FaHome className="w-5 h-5 text-white m-auto" />
                 </span>
@@ -47,12 +47,12 @@ const Sidebar = () => {
             <NavLink
               to="/admin/appointment"
               className={`flex items-center ${
-                activeItem === '/admin/appointment'
-                  ? 'text-black bg-white rounded-tl-xl rounded-bl-xl py-2 w-full'
-                  : ''
+                activeItem === "/admin/appointment"
+                  ? "text-black bg-white rounded-tl-xl rounded-bl-xl py-2 w-full"
+                  : ""
               }`}
             >
-              {activeItem === '/admin/appointment' ? (
+              {activeItem === "/admin/appointment" ? (
                 <span className="ml-2 mr-2 bg-black inline-block cursor-pointer border border-black rounded-full w-8 h-8 flex content-center items-center hover:bg-btnColor transition-all duration-300 ease-in-out">
                   <CgCalendarDates className="w-5 h-5 text-white m-auto" />
                 </span>
@@ -66,12 +66,12 @@ const Sidebar = () => {
             <NavLink
               to="/admin/doctor"
               className={`flex items-center ${
-                activeItem === '/admin/doctor'
-                  ? 'text-black bg-white rounded-tl-xl rounded-bl-xl py-2 w-full'
-                  : ''
+                activeItem === "/admin/doctor"
+                  ? "text-black bg-white rounded-tl-xl rounded-bl-xl py-2 w-full"
+                  : ""
               }`}
             >
-              {activeItem === '/admin/doctor' ? (
+              {activeItem === "/admin/doctor" ? (
                 <span className="ml-2 mr-2 bg-black inline-block cursor-pointer border border-black rounded-full w-8 h-8 flex content-center items-center hover:bg-btnColor transition-all duration-300 ease-in-out">
                   <MdLocalHospital className="w-5 h-5 text-white m-auto" />
                 </span>
@@ -85,12 +85,12 @@ const Sidebar = () => {
             <NavLink
               to="/admin/patient"
               className={`flex items-center ${
-                activeItem === '/admin/patient'
-                  ? 'text-black bg-white rounded-tl-xl rounded-bl-xl py-2 w-full'
-                  : ''
+                activeItem === "/admin/patient"
+                  ? "text-black bg-white rounded-tl-xl rounded-bl-xl py-2 w-full"
+                  : ""
               }`}
             >
-              {activeItem === '/admin/patient' ? (
+              {activeItem === "/admin/patient" ? (
                 <span className="ml-2 mr-2 bg-black cursor-pointer border border-black rounded-full w-8 h-8 flex content-center items-center hover:bg-btnColor transition-all duration-300 ease-in-out">
                   <FaUser className="w-5 h-5 text-white m-auto" />
                 </span>
@@ -104,12 +104,12 @@ const Sidebar = () => {
             <NavLink
               to="/admin/transaction"
               className={`flex items-center ${
-                activeItem === '/admin/transaction'
-                  ? 'text-black bg-white rounded-tl-xl rounded-bl-xl py-2 w-full'
-                  : ''
+                activeItem === "/admin/transaction"
+                  ? "text-black bg-white rounded-tl-xl rounded-bl-xl py-2 w-full"
+                  : ""
               }`}
             >
-              {activeItem === '/admin/transaction' ? (
+              {activeItem === "/admin/transaction" ? (
                 <span className="ml-2 mr-2 bg-black inline-block cursor-pointer border border-black rounded-full w-8 h-8 flex content-center items-center hover:bg-btnColor transition-all duration-300 ease-in-out">
                   <AiOutlineTransaction className="w-5 h-5 text-white m-auto" />
                 </span>
@@ -117,6 +117,25 @@ const Sidebar = () => {
                 <IoMdArrowDropright className="mr-2 inline-block" />
               )}
               Transaction
+            </NavLink>
+          </li>
+          <li className="py-2">
+            <NavLink
+              to="/admin/emolument"
+              className={`flex items-center ${
+                activeItem === "/admin/emolument"
+                  ? "text-black bg-white rounded-tl-xl rounded-bl-xl py-2 w-full"
+                  : ""
+              }`}
+            >
+              {activeItem === "/admin/emolument" ? (
+                <span className="ml-2 mr-2 bg-black inline-block cursor-pointer border border-black rounded-full w-8 h-8 flex content-center items-center hover:bg-btnColor transition-all duration-300 ease-in-out">
+                  <AiOutlineTransaction className="w-5 h-5 text-white m-auto" />
+                </span>
+              ) : (
+                <IoMdArrowDropright className="mr-2 inline-block" />
+              )}
+              Emolument
             </NavLink>
           </li>
         </ul>

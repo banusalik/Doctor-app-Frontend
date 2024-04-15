@@ -1,41 +1,59 @@
-import React, { useState } from 'react';
-import AdminHome from './AdminHome';
-import { FaSearch } from 'react-icons/fa';
-import { CiEdit } from 'react-icons/ci';
-import { MdDelete } from 'react-icons/md';
-import Pagination from '../../components/Admin/Pagination';
-import Modal from '../../components/Admin/Modal';
-import NewDoctorModal from '../../components/Admin/NewDoctorModal';
+import React, { useState, useEffect } from "react";
+import AdminHome from "./AdminHome";
+import { FaSearch } from "react-icons/fa";
+import { CiEdit } from "react-icons/ci";
+import { MdDelete } from "react-icons/md";
+import Pagination from "../../components/Admin/Pagination";
+// import Modal from '../../components/Admin/Modal';
+// import NewDoctorModal from '../../components/Admin/NewDoctorModal';
 
 const DoctorList = () => {
-  const totalItems = 20; // total number of items (rows)
   const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
+  const [doctorsData, setDoctorsData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const pageNumbers = Math.ceil(totalItems / itemsPerPage);
+  //const [isModalOpen, setModalOpen] = useState(false);
 
-  const [isModalOpen, setModalOpen] = useState(false);
+  // const openModal = () => {
+  //   setModalOpen(true);
+  // };
 
-  const openModal = () => {
-    setModalOpen(true);
-  };
+  // const closeModal = () => {
+  //   setModalOpen(false);
+  // };
 
-  const closeModal = () => {
-    setModalOpen(false);
-  };
+  // const handleNewPatientSubmit = () => {
+  //   // Handle new patient form submission logic
+  //   // You may want to update state or perform other actions
+  //   console.log("New Doctor submitted!");
+  //   closeModal();
+  // };
 
-  const handleNewPatientSubmit = () => {
-    // Handle new patient form submission logic
-    // You may want to update state or perform other actions
-    console.log('New Doctor submitted!');
-    closeModal();
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:8081/admin/doctors`);
+        const data = await response.json();
+        if (data.status) {
+          setDoctorsData(data.data);
+          setLoading(false);
+        } else {
+          console.error("Error fetching data:", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const onPageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
   const [activeStates, setActiveStates] = useState(
-    Array.from({ length: totalItems }, (_, index) => index + 1).reduce(
+    Array.from((_, index) => index + 1).reduce(
       (acc, itemId) => ({ ...acc, [itemId]: true }),
       {}
     )
@@ -47,47 +65,49 @@ const DoctorList = () => {
       [itemId]: !prevStates[itemId],
     }));
   };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = doctorsData.slice(indexOfFirstItem, indexOfLastItem);
+
   const renderTableRows = () => {
-    const yourData = Array.from({ length: totalItems }, (_, index) => ({
-      id: index + 1,
-      doctorId: `P${index + 1}`,
-      doctorName: `Doctor ${index + 1}`,
-      number: `555-555-${index + 1}`,
-      Department: `Department-${index + 1}`,
-      visitTime: `11:15 AM`,
-      Speciality: `Gynecologist`,
-    }));
+    if (loading)
+      return (
+        <tr>
+          <td colSpan="8">Loading...</td>
+        </tr>
+      );
 
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = yourData.slice(indexOfFirstItem, indexOfLastItem);
-
-    return currentItems.map((item) => (
-      <tr key={item.id}>
-        <td className="py-4 px-6 border text-center">{item.doctorId}</td>
-        <td className="py-4 px-6 border text-center">{item.doctorName}</td>
-        <td className="py-4 px-6 border text-center">{item.number}</td>
-        <td className="py-4 px-6 border text-center">{item.Department}</td>
-        <td className="py-4 px-6 border text-center">{item.visitTime}</td>
-        <td className="py-4 px-6 border text-center">{item.Speciality}</td>
+    return currentItems.map((doctor) => (
+      <tr key={doctor.Doctor_ID}>
+        <td className="py-4 px-6 border text-center">{doctor.Doctor_ID}</td>
+        <td className="py-4 px-6 border text-center">
+          {doctor.Doctor_Name || ""}
+        </td>
+        <td className="py-4 px-6 border text-center">
+          {doctor.Phone_Number || ""}
+        </td>
+        <td className="py-4 px-6 border text-center">
+          {doctor.Specialization_at || ""}
+        </td>
         <td className="py-4 px-6 border text-center">
           <button
             className={`px-4 py-2 mr-2 rounded-2xl ${
-              activeStates[item.id]
-                ? 'bg-green-500 text-white'
-                : 'bg-gray-300 text-gray-600'
+              activeStates[doctor.Doctor_ID]
+                ? "bg-green-500 text-white"
+                : "bg-gray-300 text-gray-600"
             }`}
-            onClick={() => handleToggle(item.id)}
+            onClick={() => handleToggle(doctor.Doctor_ID)}
           >
             Active
           </button>
           <button
             className={`px-4 py-2 rounded-2xl ${
-              !activeStates[item.id]
-                ? 'bg-red-500 text-white'
-                : 'bg-gray-300 text-gray-600'
+              !activeStates[doctor.Doctor_ID]
+                ? "bg-red-500 text-white"
+                : "bg-gray-300 text-gray-600"
             }`}
-            onClick={() => handleToggle(item.id)}
+            onClick={() => handleToggle(doctor.Doctor_ID)}
           >
             Inactive
           </button>
@@ -105,11 +125,10 @@ const DoctorList = () => {
   };
   return (
     <AdminHome>
-      {isModalOpen && (
+      {/* {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="modal-container">
             <Modal isOpen={isModalOpen} onClose={closeModal}>
-              {/* Render the NewPatientModal with specific props */}
               <NewDoctorModal
                 onSubmit={handleNewPatientSubmit}
                 onCancel={closeModal}
@@ -117,7 +136,7 @@ const DoctorList = () => {
             </Modal>
           </div>
         </div>
-      )}
+      )} */}
       <div className="m-10 pb-10 mx-10 mt-6 h-[90vh] overflow-y-auto">
         <div className="max-w-full px-10 py-2 flex justify-between rounded-2xl bg-white">
           <div className=" flex items-center">
@@ -131,9 +150,9 @@ const DoctorList = () => {
               <FaSearch className="w-5 h-5 text-white m-auto" />
             </span>
           </div>
-          <button type="button" className="btn" onClick={openModal}>
+          {/* <button type="button" className="btn" onClick={openModal}>
             + Add New Doctor
-          </button>
+          </button> */}
         </div>
 
         {/* table */}
@@ -143,28 +162,22 @@ const DoctorList = () => {
             <table className="w-full table-auto border border-gray-300">
               <thead>
                 <tr className="bg-gray-200">
-                  <th className="py-4 px-6 border" style={{ width: '5%' }}>
+                  <th className="py-4 px-6 border" style={{ width: "5%" }}>
                     Doctor ID
                   </th>
-                  <th className="py-4 px-6 border" style={{ width: '10%' }}>
+                  <th className="py-4 px-6 border" style={{ width: "10%" }}>
                     Doctor Name
                   </th>
-                  <th className="py-4 px-6 border" style={{ width: '10%' }}>
-                    Number
+                  <th className="py-4 px-6 border" style={{ width: "10%" }}>
+                    Phone Number
                   </th>
-                  <th className="py-4 px-6 border" style={{ width: '10%' }}>
-                    Department
+                  <th className="py-4 px-6 border" style={{ width: "10%" }}>
+                    Specialization
                   </th>
-                  <th className="py-4 px-6 border" style={{ width: '5%' }}>
-                    Visit Time
-                  </th>
-                  <th className="py-4 px-6 border" style={{ width: '15%' }}>
-                    Speciality
-                  </th>
-                  <th className="py-4 px-6 border" style={{ width: '20%' }}>
+                  <th className="py-4 px-6 border" style={{ width: "20%" }}>
                     Status
                   </th>
-                  <th className="py-4 px-6 border" style={{ width: '15%' }}>
+                  <th className="py-4 px-6 border" style={{ width: "15%" }}>
                     Action
                   </th>
                 </tr>
@@ -175,7 +188,6 @@ const DoctorList = () => {
           {/* Pagination */}
           <Pagination
             itemsPerPage={itemsPerPage}
-            totalItems={totalItems}
             currentPage={currentPage}
             onPageChange={onPageChange}
           />

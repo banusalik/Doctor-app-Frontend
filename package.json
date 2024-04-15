@@ -10,14 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "axios": "^1.6.7",
-    "chart.js": "^4.4.1",
+    "axios": "^1.6.8",
+    "chart.js": "^4.4.2",
     "emailjs-com": "^3.2.0",
     "flowbite": "^2.2.1",
     "js-cookie": "^3.0.5",
     "khalti-checkout-web": "^2.2.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
+    "react-datepicker": "^6.6.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
     "react-modal": "^3.16.1",

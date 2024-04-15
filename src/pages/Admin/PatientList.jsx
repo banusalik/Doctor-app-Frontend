@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AdminHome from "./AdminHome";
 import { FaSearch } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
@@ -9,6 +9,27 @@ import Modal from "../../components/Admin/Modal";
 
 const PatientList = () => {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [patients, setPatients] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    fetchPatients();
+  }, []);
+
+  const fetchPatients = async () => {
+    try {
+      const response = await fetch("http://localhost:8081/admin/patients");
+      const data = await response.json();
+      if (data.status) {
+        setPatients(data.patient);
+      }
+    } catch (error) {
+      console.error("Error fetching patients:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const openModal = () => {
     setModalOpen(true);
@@ -19,50 +40,39 @@ const PatientList = () => {
   };
 
   const handleNewPatientSubmit = () => {
-    // Handle new patient form submission logic
-    // You may want to update state or perform other actions
     console.log("New patient submitted!");
     closeModal();
+    // You may want to refetch patients here to update the list after adding a new patient
+    // fetchPatients();
   };
 
-  const totalItems = 20; // total number of items (rows)
   const itemsPerPage = 5;
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const pageNumbers = Math.ceil(totalItems / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentPatients = patients.slice(indexOfFirstItem, indexOfLastItem);
 
   const onPageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
   const renderTableRows = () => {
-    // For simplicity, let's assume yourData is an array of objects with the required fields.
-    const yourData = Array.from({ length: totalItems }, (_, index) => ({
-      id: index + 1,
-      patientId: `P${index + 1}`,
-      patientName: `Patient ${index + 1}`,
-      phoneNumber: `555-555-${index + 1}`,
-      recentVisit: `2024-01-${index + 1}`,
-      doctor: `Dr. Smith ${index + 1}`,
-      appointmentId: `A ${index + 1}`,
-      numberOfVisits: "10",
-    }));
-
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = yourData.slice(indexOfFirstItem, indexOfLastItem);
-
-    return currentItems.map((item) => (
-      <tr key={item.id}>
-        <td className="py-4 px-6 border text-center">{item.patientId}</td>
-        <td className="py-4 px-6 border text-center">{item.patientName}</td>
-        <td className="py-4 px-6 border text-center">{item.phoneNumber}</td>
-        <td className="py-4 px-6 border text-center">{item.recentVisit}</td>
-        <td className="py-4 px-6 border text-center">{item.doctor}</td>
-        <td className="py-4 px-6 border text-center">{item.appointmentId}</td>
+    return currentPatients.map((patient, index) => (
+      <tr key={index}>
+        <td className="py-4 px-6 border text-center">{patient.Patient_ID}</td>
+        <td className="py-4 px-6 border text-center">{patient.Patient_Name}</td>
+        <td className="py-4 px-6 border text-center">{patient.Phone || ""}</td>
+        <td className="py-4 px-6 border text-center">
+          {patient.Recent_Visit || ""}
+        </td>
+        <td className="py-4 px-6 border text-center">
+          {patient.Doctor_Name || ""}
+        </td>
+        <td className="py-4 px-6 border text-center">
+          {patient.Appointment_Id || ""}
+        </td>
         <td className="py-4 px-6 border text-center flex items-center justify-center">
           <span className=" h-8 w-8 rounded-full bg-yellow-500 text-white flex items-center justify-center">
-            {item.numberOfVisits}
+            {patient.Number_of_Visits}
           </span>
         </td>
 
@@ -77,13 +87,17 @@ const PatientList = () => {
       </tr>
     ));
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <AdminHome>
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="modal-container">
             <Modal isOpen={isModalOpen} onClose={closeModal}>
-              {/* Render the NewPatientModal with specific props */}
               <AddNewPatientModal
                 onSubmit={handleNewPatientSubmit}
                 onCancel={closeModal}
@@ -110,7 +124,6 @@ const PatientList = () => {
           </button>
         </div>
 
-        {/* table */}
         <div className="mx-auto mt-8 p-6 bg-white shadow-md rounded-md">
           <h2 className="text-2xl font-bold mb-6">Patient Table</h2>
           <div className="overflow-x-auto">
@@ -130,10 +143,9 @@ const PatientList = () => {
               <tbody>{renderTableRows()}</tbody>
             </table>
           </div>
-          {/* Pagination */}
           <Pagination
             itemsPerPage={itemsPerPage}
-            totalItems={totalItems}
+            totalItems={patients.length}
             currentPage={currentPage}
             onPageChange={onPageChange}
           />

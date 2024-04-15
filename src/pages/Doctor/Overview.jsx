@@ -35,34 +35,34 @@ const Overview = () => {
       Doctor_Name: "Dr. Shyam Bahadur",
       Specialization_at: "Surgery Specialist",
       About: "Lorem ipsum",
-      updateQualifications: [
-        {
-          Degree: "PhD in Surgery",
-          University: "New Apolo University",
-        },
-        {
-          Degree: "MD",
-          University: "New Apolo University",
-        },
-        {
-          Degree: "MBBS",
-          University: "New Apolo University",
-        },
-      ],
-      updateExperiences: [
-        {
-          Start_Date: "2017-01-01",
-          End_Date: "2021-09-12",
-          Hospital: "City Hospital",
-          Position: "Doctor",
-        },
-        {
-          Start_Date: "2017-01-04",
-          End_Date: "2021-09-22",
-          Hospital: "Residential Hospital",
-          Position: "Doctor",
-        },
-      ],
+      // updateQualifications: [
+      //   {
+      //     Degree: "PhD in Surgery",
+      //     University: "New Apolo University",
+      //   },
+      //   {
+      //     Degree: "MD",
+      //     University: "New Apolo University",
+      //   },
+      //   {
+      //     Degree: "MBBS",
+      //     University: "New Apolo University",
+      //   },
+      // ],
+      // updateExperiences: [
+      //   {
+      //     Start_Date: "2017-01-01",
+      //     End_Date: "2021-09-12",
+      //     Hospital: "City Hospital",
+      //     Position: "Doctor",
+      //   },
+      //   {
+      //     Start_Date: "2017-01-04",
+      //     End_Date: "2021-09-22",
+      //     Hospital: "Residential Hospital",
+      //     Position: "Doctor",
+      //   },
+      // ],
     });
   };
 
@@ -76,7 +76,10 @@ const Overview = () => {
         <>
           <div className="flex flex-col lg:flex-row">
             <figure className="w-full flex items-center lg:w-1/3">
-              <img src={doctor.Image} alt="doctor img" />
+              <img
+                src={"http://localhost:8081/image/" + doctor.Image}
+                alt="doctor img"
+              />
             </figure>
             <div className="card-body mt-4 lg:mt-10 p-4 lg:w-1/2">
               <span className="bg-[#C0E8EB] text-gray-600 w-full lg:w-2/5 text-center py-1 rounded-sm">
@@ -92,11 +95,11 @@ const Overview = () => {
             </div>
           </div>
           <div className="mx-2 mt-10">
-            <h1 className="font-bold text-2xl mb-4">About {doctor.About}</h1>
+            <h1 className="font-bold text-2xl mb-4">About {doctor.Bio}</h1>
             <p className="mb-4">{doctor.About}</p>
           </div>
           {/* Qualification */}
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <h2 className="font-bold text-lg">Update Qualifications</h2>
             {doctor.updateQualifications.map((updateQualifications, index) => (
               <div key={index} className="mb-2">
@@ -108,9 +111,9 @@ const Overview = () => {
                 </div>
               </div>
             ))}
-          </div>
+          </div> */}
           {/* Experience */}
-          <div>
+          {/* <div>
             <h2 className="font-bold text-lg mb-4">Update Experiences</h2>
             <div className="flex gap-x-4">
               {doctor.updateExperiences.map((updateExperiences, index) => (
@@ -123,7 +126,7 @@ const Overview = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
         </>
       )}
     </div>

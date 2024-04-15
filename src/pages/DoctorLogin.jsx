@@ -43,18 +43,15 @@ const DoctorLogin = () => {
         console.log("Doctor Login successful:", data);
 
         // Check if Doctor_ID exists in the response
-        if (data.id) {
-          // Store the token in localStorage
-          localStorage.setItem("token", data.token);
 
-          // Store Doctor_ID in a cookie with an expiration of 1 day
-          Cookies.set("Doctor_ID", data.id, { expires: 1 });
+        // Store the token in localStorage
+        localStorage.setItem("token", data.token);
 
-          // Redirect to doctor's profile page
-          navigate("/doctor/Profile");
-        } else {
-          console.error("Doctor_ID not found in the response");
-        }
+        // Store Doctor_ID in a cookie with an expiration of 1 day
+        Cookies.set("Doctor_ID", data.id, { expires: 1 });
+
+        // Redirect to doctor's profile page
+        navigate("/doctor/Profile");
       } else {
         // Handle login failure
         console.error("Doctor Login failed");

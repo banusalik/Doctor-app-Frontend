@@ -22,6 +22,7 @@ import About from "./pages/About";
 import Profile from "./pages/User/Profile";
 import DocProfile from "./pages/Doctor/Profile";
 import AddMore from "./components/AddMore";
+import Emolument from "./pages/Admin/Emolument ";
 
 function App() {
   return (
@@ -48,11 +49,12 @@ function App() {
         <Route path="/admin/doctor" element={<DoctorList />} exact />
         <Route path="/admin/patient" element={<PatientList />} exact />
         <Route path="/admin/transaction" element={<Transaction />} exact />
+        <Route path="/admin/emolument" element={<Emolument />} exact />
 
         <Route path="/*" element={<PageNotFound />} exact />
         <Route path="/admin/*" element={<AdminPageNotFound />} exact />
         {/* user routing */}
-        <Route path="/user/profile" element={<Profile />} exact />
+        <Route path="/user/profile/:Patient_ID" element={<Profile />} exact />
         {/* Doctor Routing */}
         <Route path="/doctor/profile" element={<DocProfile />} exact />
         <Route path="/doctor/profile" element={<DocProfile />} exact />

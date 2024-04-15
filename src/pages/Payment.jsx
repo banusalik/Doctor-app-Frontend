@@ -5,14 +5,16 @@ import KhaltiCheckout from "khalti-checkout-web";
 const Payment = () => {
   const config = {
     // replace this key with yours
-    publicKey: "test_public_key_dc74e0fd57cb46cd93832aee0a390234",
-    productIdentity: "1234567890",
+    publicKey: "test_public_key_db20ce0cdb3c4201ab57afc7ad855132",
+    productIdentity: Doctor_ID,
     productName: "Drogon",
     productUrl: "http://gameofthrones.com/buy/Dragons",
     eventHandler: {
       onSuccess(payload) {
         // hit merchant api for initiating verfication
         console.log(payload);
+        handleStatus("Paid");
+        handlePaymentSuccess(appointmentId, payload);
       },
       // onError handler is optional
       onError(error) {

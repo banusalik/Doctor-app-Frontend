@@ -10,10 +10,12 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [registrationError, setRegistrationError] = useState(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false); // State to control the visibility of the success message
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
+
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -21,6 +23,7 @@ const Register = () => {
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
+
   const formSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -35,6 +38,7 @@ const Register = () => {
       if (response.ok) {
         // Handle successful registration
         console.log("Patient registration successful");
+        setShowSuccessMessage(true); // Show success message
       } else {
         // Handle registration failure
         const errorData = await response.json();
@@ -119,6 +123,11 @@ const Register = () => {
               {registrationError && (
                 <div className="text-md text-center text-red-500 mb-4">
                   {registrationError}
+                </div>
+              )}
+              {showSuccessMessage && (
+                <div className="text-md text-center text-green-500 mb-4">
+                  Registration successful! You can now login.
                 </div>
               )}
             </form>
